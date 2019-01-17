@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         comment: 'User ID',
-        primaryKey: true
+        primaryKey: true,
       },
       firstName: {
         type: DataTypes.STRING,
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             'firstName',
             val.charAt(0).toUpperCase() + val.substring(1).toLowerCase()
           );
-        }
+        },
       },
       lastName: {
         type: DataTypes.STRING,
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
             'lastName',
             val.charAt(0).toUpperCase() + val.substring(1).toLowerCase()
           );
-        }
+        },
       },
       email: {
         type: DataTypes.STRING,
@@ -40,8 +40,8 @@ module.exports = (sequelize, DataTypes) => {
         comment: 'User email',
         // Field validation
         validate: {
-          isEmail: true
-        }
+          isEmail: true,
+        },
       },
       hash: {
         type: DataTypes.STRING,
@@ -51,8 +51,8 @@ module.exports = (sequelize, DataTypes) => {
         set(val) {
           const hash = bcrypt.hashSync(val, 12);
           this.setDataValue('hash', hash);
-        }
-      }
+        },
+      },
     },
     {
       // logical delete over physical delete
@@ -60,9 +60,9 @@ module.exports = (sequelize, DataTypes) => {
       indexes: [
         {
           unique: true,
-          fields: ['email']
-        }
-      ]
+          fields: ['email'],
+        },
+      ],
     }
   );
 

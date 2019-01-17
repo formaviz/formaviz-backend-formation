@@ -26,7 +26,7 @@ apiUsers.post('/', (req, res) =>
   !req.body.email || !req.body.password
     ? res.status(400).send({
         success: false,
-        message: 'email and password are required'
+        message: 'email and password are required',
       })
     : createUser(req.body)
         .then(user => {
@@ -35,14 +35,14 @@ apiUsers.post('/', (req, res) =>
             success: true,
             token: `JWT ${token}`,
             profile: user,
-            message: 'user created'
+            message: 'user created',
           });
         })
         .catch(err => {
           logger.error(`💥 Failed to create user : ${err.stack}`);
           return res.status(500).send({
             success: false,
-            message: `${err.name} : ${err.message}`
+            message: `${err.name} : ${err.message}`,
           });
         })
 );
@@ -65,7 +65,7 @@ apiUsers.post('/login', (req, res) =>
   !req.body.email || !req.body.password
     ? res.status(400).send({
         success: false,
-        message: 'email and password are required'
+        message: 'email and password are required',
       })
     : loginUser(req.body)
         .then(user => {
@@ -74,14 +74,14 @@ apiUsers.post('/login', (req, res) =>
             success: true,
             token: `JWT ${token}`,
             profile: user,
-            message: 'user logged in'
+            message: 'user logged in',
           });
         })
         .catch(err => {
           logger.error(`💥 Failed to login user : ${err.stack}`);
           return res.status(500).send({
             success: false,
-            message: `${err.name} : ${err.message}`
+            message: `${err.name} : ${err.message}`,
           });
         })
 );
@@ -91,7 +91,7 @@ apiUsersProtected.get('/', (req, res) =>
   res.status(200).send({
     success: true,
     profile: req.user,
-    message: 'user logged in'
+    message: 'user logged in',
   })
 );
 
