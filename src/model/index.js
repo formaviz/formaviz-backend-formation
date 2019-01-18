@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const logger = require('../logger');
 
 const db = {};
 const basename = path.basename(module.filename);
@@ -28,14 +27,5 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
-sequelize
-  .authenticate()
-  .then(() => {
-    logger.info('Connection has been established successfully.');
-  })
-  .catch(err => {
-    logger.error('Unable to connect to the database:', err);
-  });
 
 module.exports = db;
