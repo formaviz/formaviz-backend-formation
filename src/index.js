@@ -1,9 +1,9 @@
-const api = require('./api');
+const api = require('./api/index');
 const db = require('./model');
-const logger = require('./logger');
+const logger = require('./logger').logger;
 
 const port = process.env.PORT || 3000;
-const ip = process.env.IP | 'localhost';
+const ip = process.env.IP || '0.0.0.0';
 
 db.sequelize
   .sync()

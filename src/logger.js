@@ -1,8 +1,10 @@
-const pino = require('pino');
-
-const logger = pino({
+const pino = require('pino')({
   prettyPrint: { colorize: true },
   level: process.env.LEVEL || 'info',
 });
 
-module.exports = logger;
+const expressPino = require('express-pino-logger')({
+  logger: pino,
+});
+
+module.exports = expressPino;
