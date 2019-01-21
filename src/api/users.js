@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jwt-simple');
-const { createUser, loginUser } = require('../controller/users');
+const { createUser, loginUser, updateUser } = require('../controller/users');
 const logger = require('../logger');
 
 const apiUsers = express.Router();
@@ -94,5 +94,18 @@ apiUsersProtected.get('/', (req, res) =>
     message: 'user logged in',
   })
 );
+
+apiUsersProtected.put('/', (req, res) =>
+  updateUser(req.user).then(user => {
+    res.status(200).send({
+      success: true,
+      profile: user,
+      message: 'user updated',
+    });
+  })
+);
+
+// apiUsersProtected.delete('/', (req, res) =>
+// );
 
 module.exports = { apiUsers, apiUsersProtected };

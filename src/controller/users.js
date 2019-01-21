@@ -1,6 +1,8 @@
 const omit = require('lodash.omit');
 const { Users } = require('../model');
 
+const logger = require('../logger').logger;
+
 const createUser = ({ firstName, lastName, email, password }) =>
   Users.create({
     email,
@@ -51,8 +53,13 @@ const getUser = ({ id }) =>
       : Promise.reject(new Error('UNKOWN OR DELETED USER'))
   );
 
+// const updateUser = ({ user }) =>
+//     getUser()
+//   );
+
 module.exports = {
   createUser,
   getUser,
   loginUser,
+  // updateUser,
 };
