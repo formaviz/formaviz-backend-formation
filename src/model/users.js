@@ -66,6 +66,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  Users.associate = models => {
+    Users.hasOne(models.Groups, { foreignKey: 'owner_id', as: 'Owner' });
+    Users.belongsToMany(models.Groups, { through: 'Member' });
+  };
+
   // we don't want to send password even if crypted
   Users.excludeAttributes = ['hash'];
 
