@@ -1,6 +1,7 @@
 const express = require('express');
 const expressPino = require('../logger');
 const { apiUsers, apiUsersProtected } = require('./users');
+const { apiGroups } = require('./groups');
 const { isAuthenticated, initAuth } = require('../controller/auth');
 
 const api = express();
@@ -23,6 +24,7 @@ apiRoutes.get('/', (req, res) => {
 apiRoutes
   .use('/users', apiUsers)
   .use(isAuthenticated)
+  .use('/groups', apiGroups)
   .use('/users', apiUsersProtected)
   .use((err, req, res, next) => {
     res.status(403).send({
