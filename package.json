@@ -6,7 +6,7 @@
   "scripts": {
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"./src/**/*.js\" ",
     "eslint": "eslint . --fix",
-    "dev": "env-cmd .env node ./src"
+    "dev": "env-cmd .env nodemon ./src"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,10 @@
     "bcrypt": "^3.0.3",
     "express": "^4.16.4",
     "express-pino-logger": "^4.0.0",
+    "jwt-simple": "^0.5.5",
+    "lodash.omit": "^4.5.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
     "pg": "^7.8.0",
     "pg-hstore": "^2.3.2",
     "pino": "^5.10.7",
