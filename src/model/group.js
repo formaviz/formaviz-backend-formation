@@ -1,5 +1,5 @@
-module.exports = (sequelize, DataTypes) => {
-  return sequelize.define(
+module.exports = (sequelize, DataTypes) =>
+  sequelize.define(
     'Groups',
     {
       title: {
@@ -25,4 +25,3 @@ module.exports = (sequelize, DataTypes) => {
       ],
     }
   );
-};

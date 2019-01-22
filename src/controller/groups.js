@@ -7,10 +7,11 @@ const createGroup = ({ title, description, metadatas }, user) =>
     description: description || '',
     metadatas: metadatas || '',
     owner_id: user.id,
-  })
-    .then()
-    .catch(err => {
-      logger.error(err);
-    });
+  }).then();
 
-module.exports = { createGroup };
+const getAllGroups = () =>
+  Groups.findAll({
+    attributes: ['title'],
+  }).then();
+
+module.exports = { createGroup, getAllGroups };

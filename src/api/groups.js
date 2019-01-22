@@ -1,10 +1,21 @@
 const express = require('express');
-const logger = require('../logger');
-const createGroup = require('../controller/groups').createGroup;
+const logger = require('../logger').logger;
+const { createGroup, getAllGroups } = require('../controller/groups');
 
 const apiGroups = express.Router();
+const apiGroupsProtected = express.Router();
 
-apiGroups.post('/', (req, res) =>
+apiGroups.get('/', (req, res) => {
+  getAllGroups().then(groups =>
+    res.status(200).send({
+      success: true,
+      profile: groups,
+      message: 'groups retrieved with success',
+    })
+  );
+});
+
+apiGroupsProtected.post('/', (req, res) =>
   !req.body.title
     ? res.status(400).send({
         success: false,
@@ -26,4 +37,4 @@ apiGroups.post('/', (req, res) =>
         })
 );
 
-module.exports = { apiGroups };
+module.exports = { apiGroups, apiGroupsProtected };
