@@ -1,13 +1,13 @@
-const omit = require("lodash.omit");
-const { Users } = require("../model");
+const omit = require('lodash.omit');
+const { Users } = require('../model');
 
-const logger = require("../logger").logger;
+const logger = require('../logger').logger;
 
 const createUser = ({ firstName, lastName, email, password }) =>
   Users.create({
     email,
-    firstName: firstName || "",
-    lastName: lastName || "",
+    firstName: firstName || '',
+    lastName: lastName || '',
     hash: password
   }).then(user =>
     omit(
@@ -34,7 +34,7 @@ const loginUser = ({ email, password }) =>
           ),
           user.comparePassword(password)
         ])
-      : Promise.reject(new Error("UNKOWN OR DELETED USER"))
+      : Promise.reject(new Error('UNKOWN OR DELETED USER'))
   );
 
 const getUser = ({ id }) =>
@@ -50,7 +50,7 @@ const getUser = ({ id }) =>
           }),
           Users.excludeAttributes
         )
-      : Promise.reject(new Error("UNKOWN OR DELETED USER"))
+      : Promise.reject(new Error('UNKOWN OR DELETED USER'))
   );
 
 const updateUser = ({ firstName, lastName, email }, id) =>
@@ -78,13 +78,23 @@ const updateUser = ({ firstName, lastName, email }, id) =>
     ).then(user =>
       user && !user.deletedAt
         ? omit(user, Users.all)
-        : Promise.reject(new Error("UNKOWN OR DELETED USER"))
+        : Promise.reject(new Error('UNKOWN OR DELETED USER'))
     );
   });
+
+const deleteUser = id =>
+  Users.destroy({
+    where: { id }
+  }).then(user =>
+    user && !user.deletedAt
+      ? omit(user, Users.all)
+      : Promise.reject(new Error('UNKOWN OR DELETED USER'))
+  );
 
 module.exports = {
   createUser,
   getUser,
   loginUser,
-  updateUser
+  updateUser,
+  deleteUser
 };
