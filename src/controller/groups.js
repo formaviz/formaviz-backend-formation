@@ -4,14 +4,14 @@ const logger = require('../logger').logger;
 const createGroup = ({ title, description, metadatas }, user) =>
   Groups.create({
     title,
-    description: description || '',
+    description,
     metadatas: metadatas || '',
-    owner_id: user.id,
+    owner_id: user.id
   }).then();
 
 const getAllGroups = () =>
   Groups.findAll({
-    attributes: ['title'],
+    attributes: ['title', 'description']
   }).then();
 
 module.exports = { createGroup, getAllGroups };

@@ -127,7 +127,7 @@ apiUsersProtected.delete('/', (req, res) =>
       });
     })
     .catch(err => {
-      logger.error(`💥 Failed to update user : ${err.stack}`);
+      logger.error(`💥 Failed to delete user : ${err.stack}`);
       return res.status(500).send({
         success: false,
         message: `${err.name} : ${err.message}`

@@ -30,7 +30,7 @@ apiRoutes
   .use((err, req, res, next) => {
     res.status(403).send({
       success: false,
-      message: `${err.name} : ${err.message}`,
+      message: `${err.name} : ${err.message}`
     });
     next();
   });
