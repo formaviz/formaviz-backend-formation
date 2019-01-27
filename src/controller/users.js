@@ -53,13 +53,23 @@ const getUser = ({ id }) =>
       : Promise.reject(new Error('UNKOWN OR DELETED USER'))
   );
 
-// const updateUser = ({ user }) =>
-//     getUser()
-//   );
+const updateUser = (user, userId) =>
+  Users.update(
+    {
+      firstName: user.firstName,
+      lastName: user.lastName,
+    },
+    {
+      returning: true,
+      where: {
+        id: userId,
+      },
+    }
+  );
 
 module.exports = {
   createUser,
   getUser,
   loginUser,
-  // updateUser,
+  updateUser,
 };
