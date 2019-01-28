@@ -74,7 +74,8 @@ apiUsers.post('/login', (req, res) =>
       })
     : loginUser(req.body)
         .then(user => {
-          const token = jwt.encode({ id: user.id }, process.env.JWT_SECRET);
+          logger.debug(user[0].id);
+          const token = jwt.encode({ id: user[0].id }, process.env.JWT_SECRET);
           return res.status(200).send({
             success: true,
             token: `JWT ${token}`,

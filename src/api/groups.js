@@ -3,7 +3,8 @@ const logger = require('../logger').logger;
 const {
   createGroup,
   getAllGroups,
-  addMember
+  addMember,
+  deleteMember
 } = require('../controller/groups');
 
 const apiGroups = express.Router();
@@ -41,13 +42,14 @@ apiGroupsProtected.post('/', (req, res) =>
         })
 );
 
-apiGroupsProtected.put('/', (req, res) =>
+apiGroupsProtected.put('/add', (req, res) => {
+  logger.debug(req.user);
   !req.body.title || !req.body.email
     ? res.status(400).send({
         success: false,
         message: 'group title and user email required'
       })
-    : addMember(req.body.title, req.body.email)
+    : addMember(req.body.title, req.body.email, req.user)
         .then(() =>
           res.status(200).send({
             success: true,
@@ -56,6 +58,28 @@ apiGroupsProtected.put('/', (req, res) =>
         )
         .catch(err => {
           logger.error(`💥 Failed to add member : ${err.stack}`);
+          return res.status(500).send({
+            success: false,
+            message: `${err.name} : ${err.message}`
+          });
+        });
+});
+
+apiGroupsProtected.put('/del', (req, res) =>
+  !req.body.title || !req.body.email
+    ? res.status(400).send({
+        success: false,
+        message: 'group title and user email required'
+      })
+    : deleteMember(req.body.title, req.body.email, req.user.id)
+        .then(() =>
+          res.status(200).send({
+            success: true,
+            message: 'user removed from the group'
+          })
+        )
+        .catch(err => {
+          logger.error(`💥 Failed to remove member : ${err.stack}`);
           return res.status(500).send({
             success: false,
             message: `${err.name} : ${err.message}`

@@ -14,7 +14,26 @@ const createGroup = ({ title, description, metadatas }, user) =>
     owner_id: user.id
   }).then();
 
-const addMember = (groupTitle, userEmail, ownerId) =>
+const addMember = (groupTitle, userEmail, ownerUser) =>
+  Users.findOne({
+    where: { email: userEmail }
+  }).then(user =>
+    !user
+      ? Promise.reject(new Error('UNKNOWN OR DELETED USER'))
+      : Groups.findOne({
+          where: {
+            title: groupTitle
+          }
+        }).then(group =>
+          !group
+            ? Promise.reject(new Error('UNKNONW OR DELETED GROUP'))
+            : group.owner_id !== ownerUser
+            ? Promise.reject(new Error('LOGGED USER IS NOT THE GROUP OWNER'))
+            : group.addUsers(user).then(group.save)
+        )
+  );
+
+const deleteMember = (groupTitle, userEmail, ownerId) =>
   Users.findOne({
     where: { email: userEmail }
   }).then(user =>
@@ -29,8 +48,10 @@ const addMember = (groupTitle, userEmail, ownerId) =>
             ? Promise.reject(new Error('UNKNONW OR DELETED GROUP'))
             : group.owner_id !== ownerId
             ? Promise.reject(new Error('LOGGED USER IS NOT THE GROUP OWNER'))
-            : group.addUsers(user).then(group.save)
+            : !group.getUsers(user)
+            ? Promise.reject(new Error('USER IS NOT IN THE GROUP'))
+            : group.removeUsers(user).then(group.save)
         )
   );
 
-module.exports = { createGroup, getAllGroups, addMember };
+module.exports = { createGroup, getAllGroups, addMember, deleteMember };
