@@ -1,4 +1,7 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const hpp = require('hpp');
+const helmet = require('helmet');
 const expressPino = require('../logger');
 const { apiUsers, apiUsersProtected } = require('./users');
 const { apiGroups, apiGroupsProtected } = require('./groups');
@@ -10,6 +13,9 @@ initAuth();
 api.use(express.json({ limit: '1mb' }));
 const apiRoutes = express.Router();
 
+api.use(bodyParser.urlencoded());
+api.use(hpp);
+api.use(helmet());
 api.use(expressPino);
 
 apiRoutes.use((req, res, next) => {
@@ -30,7 +36,7 @@ apiRoutes
   .use((err, req, res, next) => {
     res.status(403).send({
       success: false,
-      message: `${err.name} : ${err.message}`
+      message: `${err.name} : ${err.message}`,
     });
     next();
   });
