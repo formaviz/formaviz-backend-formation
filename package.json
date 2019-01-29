@@ -6,6 +6,7 @@
   "scripts": {
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"./src/**/*.js\" ",
     "eslint": "eslint . --fix",
+    "start": "node ./src",
     "dev": "env-cmd .env nodemon ./src"
   },
   "repository": {
