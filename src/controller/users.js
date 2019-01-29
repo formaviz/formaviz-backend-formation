@@ -8,11 +8,11 @@ const createUser = ({ firstName, lastName, email, password }) =>
     email,
     firstName: firstName || '',
     lastName: lastName || '',
-    hash: password
+    hash: password,
   }).then(user =>
     omit(
       user.get({
-        plain: true
+        plain: true,
       }),
       Users.excludeAttributes
     )
@@ -21,18 +21,18 @@ const createUser = ({ firstName, lastName, email, password }) =>
 const loginUser = ({ email, password }) =>
   Users.findOne({
     where: {
-      email
-    }
+      email,
+    },
   }).then(user =>
     user && !user.deletedAt
       ? Promise.all([
           omit(
             user.get({
-              plain: true
+              plain: true,
             }),
             Users.excludeAttributes
           ),
-          user.comparePassword(password)
+          user.comparePassword(password),
         ])
       : Promise.reject(new Error('UNKOWN OR DELETED USER'))
   );
@@ -40,13 +40,13 @@ const loginUser = ({ email, password }) =>
 const getUser = ({ id }) =>
   Users.findOne({
     where: {
-      id
-    }
+      id,
+    },
   }).then(user =>
     user && !user.deletedAt
       ? omit(
           user.get({
-            plain: true
+            plain: true,
           }),
           Users.excludeAttributes
         )
@@ -56,8 +56,8 @@ const getUser = ({ id }) =>
 const updateUser = ({ firstName, lastName, email }, id) =>
   Users.findOne({
     where: {
-      id
-    }
+      id,
+    },
   }).then(user => {
     if (firstName != null) user.firstName = firstName;
     if (lastName != null) user.lastName = lastName;
@@ -67,13 +67,13 @@ const updateUser = ({ firstName, lastName, email }, id) =>
       {
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
         // hash: user.password
       },
       {
         where: { id },
         returning: true,
-        plain: true
+        plain: true,
       }
     ).then(user =>
       user && !user.deletedAt
@@ -84,7 +84,7 @@ const updateUser = ({ firstName, lastName, email }, id) =>
 
 const deleteUser = id =>
   Users.destroy({
-    where: { id }
+    where: { id },
   }).then(user =>
     user && !user.deletedAt
       ? omit(user, Users.all)
@@ -96,5 +96,5 @@ module.exports = {
   getUser,
   loginUser,
   updateUser,
-  deleteUser
+  deleteUser,
 };
