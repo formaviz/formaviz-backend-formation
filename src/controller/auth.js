@@ -1,45 +1,32 @@
-const { ExtractJwt, Strategy } = require('passport-jwt');
+// Load Passport
 const passport = require('passport');
-const util = require('util');
+const Auth0Strategy = require('passport-auth0');
 
-const { getUser } = require('./users');
-const logger = require('../logger').logger;
+// Configure Passport to use Auth0
+const strategy = new Auth0Strategy(
+  {
+    domain: process.env.AUTH0_DOMAIN,
+    clientID: process.env.AUTH0_CLIENT_ID,
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
+    callbackURL:
+      process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/callback',
+  },
+  (accessToken, refreshToken, extraParams, profile, done) =>
+    // accessToken is the token to call Auth0 API (not needed in the most cases)
+    // extraParams.id_token has the JSON Web Token
+    // profile has all the information from the user
+    done(null, profile)
+);
 
-const jwtStrategy = opts =>
-  new Strategy(opts, (jwtPayload, done) => {
-    logger.debug(`${util.inspect(jwtPayload)}`);
-    getUser(jwtPayload)
-      .then(user => {
-        if (user) {
-          done(null, user);
-        } else {
-          done(null, false);
-        }
-        return null;
-      })
-      .catch(err => done(err, false));
-  });
+passport.use(strategy);
 
-const initAuth = () => {
-  const opts = {};
-  opts.secretOrKey = process.env.JWT_SECRET;
-  opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
-  passport.use(jwtStrategy(opts));
-};
+// You can use this section to keep a smaller payload
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
 
-const isAuthenticated = (req, res, next) =>
-  passport.authenticate('jwt', { session: false }, (err, user) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return next(new Error('UNAUTHORIZED USER'));
-    }
-    req.user = user;
-    return next();
-  })(req, res, next);
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
 
-module.exports = {
-  isAuthenticated,
-  initAuth
-};
+module.exports = passport;

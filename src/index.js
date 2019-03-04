@@ -1,4 +1,4 @@
-const api = require('./api/index');
+const app = require('./api/index');
 const db = require('./model');
 const logger = require('./logger').logger;
 
@@ -8,7 +8,7 @@ const ip = process.env.IP || '0.0.0.0';
 db.sequelize
   .sync()
   .then(() =>
-    api.listen(port, ip, err =>
+    app.listen(port, ip, err =>
       err
         ? logger.error(`🔥 Failed to start API : ${err.stack}`)
         : logger.info(`🌎 API is listening on port ${port}`)

@@ -1,22 +1,33 @@
 const express = require('express');
+const session = require('express-session');
+const passport = require('../controller/auth');
 const bodyParser = require('body-parser');
-const hpp = require('hpp');
-const helmet = require('helmet');
 const expressPino = require('../logger');
-const { apiUsers, apiUsersProtected } = require('./users');
-const { apiGroups, apiGroupsProtected } = require('./groups');
-const { isAuthenticated, initAuth } = require('../controller/auth');
 
-const api = express();
-initAuth();
+const apiAuth = require('./auth');
 
-api.use(express.json({ limit: '1mb' }));
+const app = express();
+
+const sess = {
+    secret: 'I AM VERY SECRET',
+    cookie: {},
+    resave: false,
+    saveUninitialized: true,
+};
+
+if (app.get('env') === 'production') {
+    sess.cookie.secure = true; // serve secure cookies, requires https
+}
+
+app.use(session(sess));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(express.json({ limit: '1mb' }));
 const apiRoutes = express.Router();
 
-api.use(bodyParser.urlencoded());
-api.use(hpp);
-api.use(helmet());
-api.use(expressPino);
+app.use(bodyParser.urlencoded());
+app.use(expressPino);
 
 apiRoutes.use((req, res, next) => {
   req.log.info();
@@ -24,22 +35,16 @@ apiRoutes.use((req, res, next) => {
 });
 
 apiRoutes.get('/', (req, res) => {
-  res.status(200).send({ message: 'Hello from my awesome api !' });
+  res.status(200).send({ message: 'Hello from my awesome app !' });
 });
 
-apiRoutes
-  .use('/users', apiUsers)
-  .use('/groups', apiGroups)
-  .use(isAuthenticated)
-  .use('/groups', apiGroupsProtected)
-  .use('/users', apiUsersProtected)
-  .use((err, req, res, next) => {
-    res.status(403).send({
-      success: false,
-      message: `${err.name} : ${err.message}`,
-    });
-    next();
+apiRoutes.use((err, req, res, next) => {
+  res.status(403).send({
+    success: false,
+    message: `${err.name} : ${err.message}`,
   });
+  next();
+});
 
-api.use('/api/v1', apiRoutes);
-module.exports = api;
+app.use('/api/v1', apiRoutes).use('/', apiAuth);
+module.exports = app;
