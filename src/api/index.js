@@ -46,5 +46,5 @@ apiRoutes.use((err, req, res, next) => {
   next();
 });
 
-app.use('/api/v1', apiRoutes).use('/', apiAuth);
+app.use('/api/v1', apiRoutes).use('/api/v1', apiAuth);
 module.exports = app;
