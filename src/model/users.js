@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt'); // https://github.com/kelektiv/node.bcrypt.js
-
 module.exports = (sequelize, DataTypes) => {
   const Users = sequelize.define(
     'Users',
@@ -8,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         // Avoid usage of auto-increment numbers, UUID is a better choice
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        comment: 'User ID',
+        comment: 'User Id',
         primaryKey: true
       },
       firstName: {
@@ -57,7 +55,8 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Users.associate = models => {
-      Users.hasMany(models.Ratings, { foreignKey: 'userId' });
+      Users.hasMany(models.Ratings, { foreignKey: 'userOfRating' });
+      Users.belongsToMany(models.Roles, { through: 'UsersRoles' });
   };
 
   return Users;
