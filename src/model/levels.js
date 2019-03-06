@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
             idLevel: {
                 type: DataTypes.INTEGER,
                 comment: 'Level id',
-                primaryKey: true
+                primaryKey: true,
+                autoIncrement: true
             },
             grade: {
                 type: DataTypes.STRING,

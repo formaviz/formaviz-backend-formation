@@ -3,10 +3,10 @@ module.exports = (sequelize, DataTypes) => {
         'Roles',
         {
             idRole: {
-                type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                type: DataTypes.INTEGER,
                 comment: 'Role Id',
-                primaryKey: true
+                primaryKey: true,
+                autoIncrement: true
             },
             name: {
                 type: DataTypes.STRING,
