@@ -41,10 +41,12 @@ module.exports = (sequelize, DataTypes) => {
             },
             duration: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
                 comment: 'duration of training in nb of years'
             },
             schoolName: {
                 type: DataTypes.STRING,
+                allowNull: false,
                 comment: 'name of school'
             },
             schoolDescription: {
@@ -53,6 +55,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             schoolPostalCode: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
                 comment: 'school city CP'
             },
             schoolCity: {

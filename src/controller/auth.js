@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 // Load Passport
 const passport = require('passport');
 const Auth0Strategy = require('passport-auth0');
