@@ -1,14 +1,15 @@
 /* eslint-disable linebreak-style */
 const omit = require('lodash.omit');
 const { Users } = require('../model');
-const logger = require('../logger').logger;
+const { logger } = require('../logger');
 
 
-const createUser = ({ firstName, lastName, email }) =>
+const createUser = ({ firstName, lastName, email, role }) =>
     Users.create({
         email,
         firstName: firstName || '',
-        lastName: lastName || ''
+        lastName: lastName || '',
+        role: role || 'EVAL'
     }).then(user => { return user }
     );
 
@@ -38,12 +39,13 @@ const updateUser = ({idUser, firstName, lastName, email}) => {
 
 
 const deleteUser = ({ idUser }) => {
-  return Users.destroy({
+    logger.info(" controller deleting idUser %s ", idUser)
+    return Users.destroy({
     where: {idUser}}
   ).then(affectedRows => {
-    logger.info(" %i rows deleted", affectedRows);
+    logger.info(" %s rows deleted", affectedRows);
     return affectedRows === 1
-      ? Promise.resolve("The user [id= %i] has been deleted", idUser)
+      ? Promise.resolve("The user id " + idUser + " has been deleted")
       : Promise.reject(new Error('UNKNOWN OR DELETED USER'))
   });
 }

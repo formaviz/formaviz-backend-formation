@@ -115,12 +115,12 @@ apiUsersProtected.put('/:idUser', (req, res) => {
       }
 );
 
-apiUsersProtected.delete('/', (req, res) => {
-    logger.info("[API] id : %s ",req.user.idUser)
-    const id = req.user.idUser
-    deleteUser({id})
+apiUsersProtected.delete('/:idUser', (req, res) => {
+    logger.info("[API] id : %s ",req.params.idUser)
+    const idUser = req.params.idUser;
+    deleteUser({idUser})
         .then((value) => {
-          logger.info("[API] the user with id : %s has been deleted", id);
+          logger.info("[API] the user with id : " + idUser + " has been deleted");
           return res.status(200).send({
             success: true,
             return: value,

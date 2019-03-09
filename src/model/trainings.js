@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.TEXT,
                 comment: 'Training description'
             },
+            expertise: {
+                type: DataTypes.TEXT,
+                comment: 'Training area of expertise'
+            },
             admLevel: {
                 type: DataTypes.TEXT,
                 comment: 'Eligible training backgrounds'
@@ -52,6 +56,10 @@ module.exports = (sequelize, DataTypes) => {
             schoolDescription: {
                 type: DataTypes.TEXT,
                 comment: 'presentation of school'
+            },
+            schoolAddress: {
+                type: DataTypes.TEXT,
+                comment: 'address of school'
             },
             schoolPostalCode: {
                 type: DataTypes.INTEGER,

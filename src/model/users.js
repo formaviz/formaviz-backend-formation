@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 module.exports = (sequelize, DataTypes) => {
   const Users = sequelize.define(
     'Users',
@@ -31,6 +32,10 @@ module.exports = (sequelize, DataTypes) => {
           );
         }
       },
+      role: {
+          type: DataTypes.STRING,
+          comment: 'Role of user'
+      },
       email: {
         type: DataTypes.STRING,
         // Not null management
@@ -56,7 +61,6 @@ module.exports = (sequelize, DataTypes) => {
 
   Users.associate = models => {
       Users.hasMany(models.Ratings, { foreignKey: 'userOfRating' });
-      Users.belongsToMany(models.Roles, { through: 'UsersRoles' });
   };
 
   return Users;

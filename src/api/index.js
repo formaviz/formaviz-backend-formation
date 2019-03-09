@@ -7,6 +7,7 @@ const expressPino = require('../logger');
 
 const apiAuth = require('./auth');
 const { apiUsers, apiUsersProtected } = require('./users');
+const { apiTrainings } = require('./trainings');
 
 const app = express();
 
@@ -42,6 +43,7 @@ apiRoutes
     // api bellow this middelware require Authorization
 //  .use(isAuthenticated)
     .use('/users', apiUsersProtected)
+    .use('/trainings', apiTrainings)
     .use((err, req, res, next) => {
             res.status(403).send({
                 success: false,
