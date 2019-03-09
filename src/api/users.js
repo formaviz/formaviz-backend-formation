@@ -2,7 +2,7 @@
 const express = require('express');
 const jwt = require('jwt-simple');
 const { createUser, loginUser , updateUser , deleteUser} = require('../controller/users');
-const logger = require('../logger').logger;
+const {logger} = require('../logger');
 
 const apiUsers = express.Router();
 
