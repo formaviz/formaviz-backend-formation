@@ -1,6 +1,6 @@
 const express = require('express');
 const session = require('express-session');
-const passport = require('../controller/auth');
+const { passport } = require('../controller/auth');
 const bodyParser = require('body-parser');
 const expressPino = require('../logger');
 
@@ -9,14 +9,14 @@ const apiAuth = require('./auth');
 const app = express();
 
 const sess = {
-    secret: 'I AM VERY SECRET',
-    cookie: {},
-    resave: false,
-    saveUninitialized: true,
+  secret: 'I AM VERY SECRET',
+  cookie: {},
+  resave: false,
+  saveUninitialized: true,
 };
 
 if (app.get('env') === 'production') {
-    sess.cookie.secure = true; // serve secure cookies, requires https
+  sess.cookie.secure = true; // serve secure cookies, requires https
 }
 
 app.use(session(sess));
@@ -46,5 +46,5 @@ apiRoutes.use((err, req, res, next) => {
   next();
 });
 
-app.use('/api/v1', apiRoutes).use('/', apiAuth);
+app.use('/api/v1', apiRoutes).use('/api/v1', apiAuth);
 module.exports = app;
