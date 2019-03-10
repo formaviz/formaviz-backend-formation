@@ -1,27 +1,12 @@
 const express = require('express');
-const session = require('express-session');
-const { passport } = require('../controller/auth');
+
 const bodyParser = require('body-parser');
 const expressPino = require('../logger');
 
+const { checkJwt } = require('../controller/auth');
 const apiAuth = require('./auth');
 
 const app = express();
-
-const sess = {
-  secret: 'I AM VERY SECRET',
-  cookie: {},
-  resave: false,
-  saveUninitialized: true,
-};
-
-if (app.get('env') === 'production') {
-  sess.cookie.secure = true; // serve secure cookies, requires https
-}
-
-app.use(session(sess));
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(express.json({ limit: '1mb' }));
 const apiRoutes = express.Router();
@@ -35,7 +20,12 @@ apiRoutes.use((req, res, next) => {
 });
 
 apiRoutes.get('/', (req, res) => {
-  res.status(200).send({ message: 'Hello from my awesome app !' });
+  res.status(200).send({ message: 'Hello from formaviz api !' });
+});
+
+/* Example of protected route, just use checkJwt middleware */
+apiRoutes.get('/private', checkJwt, (req, res) => {
+  res.status(200).send({ message: 'Your token is valid :-)' });
 });
 
 apiRoutes.use((err, req, res, next) => {
@@ -46,5 +36,7 @@ apiRoutes.use((err, req, res, next) => {
   next();
 });
 
-app.use('/api/v1', apiRoutes).use('/api/v1', apiAuth);
+apiRoutes.use(apiAuth);
+app.use('/api/v1', apiRoutes);
+
 module.exports = app;
