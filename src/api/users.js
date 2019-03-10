@@ -1,8 +1,12 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
 const jwt = require('jwt-simple');
-const { createUser, loginUser , updateUser , deleteUser} = require('../controller/users');
+const {createUser, loginUser, updateUser, deleteUser} = require('../controller/users');
 const {logger} = require('../logger');
+const {
+  jsonValidator,
+  USER_CREATION_SCHEMA
+  } = require('../service/json-validator');
 
 const apiUsers = express.Router();
 
@@ -22,30 +26,31 @@ const apiUsers = express.Router();
  * @apiSuccess {JSON} profile Profile informations about the User.
  */
 apiUsers.post('/', (req, res) => {
-    logger.info(' received request to create user %s %s ', req.body.firstName, req.body.lastName)
-        !req.body.email
-            ? res.status(400).send({
-                success: false,
-                message: 'email is required'
-            })
-            : createUser(req.body)
-                .then(user => {
-                    logger.info(' api user successfully created %s %s', user.firstName, user.idUser);
+    logger.info(' received request to create user %s %s ', req.body.firstName, req.body.lastName);
+    const valid = jsonValidator.validateUser(USER_CREATION_SCHEMA, req.body);
+    return (!valid.valid) ?
+      (res.status(400).send({
+        success: false,
+        message: valid.erros
+      })) :
+      createUser(req.body)
+        .then(user => {
+          logger.info(' api user successfully created %s %s', user.firstName, user.idUser);
 
-                    return res.status(201).send({
-                        success: true,
-                        profile: user,
-                        message: 'user created'
-                    });
-                })
-                .catch(err => {
-                    logger.error(`💥 Failed to create user : ${err.stack}`);
-                    return res.status(500).send({
-                        success: false,
-                        message: `${err.name} : ${err.message}`
-                    });
-                });
-        }
+          return res.status(201).send({
+            success: true,
+            profile: user,
+            message: 'user created'
+          });
+        })
+        .catch(err => {
+          logger.error(`💥 Failed to create user : ${err.stack}`);
+          return res.status(500).send({
+            success: false,
+            message: `${err.name} : ${err.message}`
+          });
+        });
+  }
 );
 
 /**
@@ -64,26 +69,26 @@ apiUsers.post('/', (req, res) => {
 apiUsers.post('/login', (req, res) =>
   !req.body.email
     ? res.status(400).send({
-        success: false,
-        message: 'email is required'
-      })
+      success: false,
+      message: 'email is required'
+    })
     : loginUser(req.body)
-        .then(user => {
-          const token = jwt.encode({ id: user.id }, process.env.JWT_SECRET);
-          return res.status(200).send({
-            success: true,
-            token: `JWT ${token}`,
-            profile: user,
-            message: 'user logged in'
-          });
-        })
-        .catch(err => {
-          logger.error(`💥 Failed to login user : ${err.stack}`);
-          return res.status(500).send({
-            success: false,
-            message: `${err.name} : ${err.message}`
-          });
-        })
+    .then(user => {
+      const token = jwt.encode({id: user.id}, process.env.JWT_SECRET);
+      return res.status(200).send({
+        success: true,
+        token: `JWT ${token}`,
+        profile: user,
+        message: 'user logged in'
+      });
+    })
+    .catch(err => {
+      logger.error(`💥 Failed to login user : ${err.stack}`);
+      return res.status(500).send({
+        success: false,
+        message: `${err.name} : ${err.message}`
+      });
+    })
 );
 
 const apiUsersProtected = express.Router();
@@ -96,45 +101,45 @@ apiUsersProtected.get('/', (req, res) =>
 );
 
 apiUsersProtected.put('/:idUser', (req, res) => {
-  req.body.idUser = req.params.idUser;
-      updateUser(req.body)
-        .then(user => {
-          return res.status(201).send({
-            success: true,
-            profile: user,
-            message: 'user updated'
-          });
-        })
-        .catch(err => {
-          logger.error(`💥 Failed to update user : ${err.stack}`);
-          return res.status(500).send({
-            success: false,
-            message: `${err.name} : ${err.message}`
-          });
+    req.body.idUser = req.params.idUser;
+    updateUser(req.body)
+      .then(user => {
+        return res.status(201).send({
+          success: true,
+          profile: user,
+          message: 'user updated'
         });
-      }
+      })
+      .catch(err => {
+        logger.error(`💥 Failed to update user : ${err.stack}`);
+        return res.status(500).send({
+          success: false,
+          message: `${err.name} : ${err.message}`
+        });
+      });
+  }
 );
 
 apiUsersProtected.delete('/:idUser', (req, res) => {
-    logger.info("[API] id : %s ",req.params.idUser)
+    logger.info('[API] id : %s ', req.params.idUser);
     const idUser = req.params.idUser;
     deleteUser({idUser})
-        .then((value) => {
-          logger.info("[API] the user with id : " + idUser + " has been deleted");
-          return res.status(200).send({
-            success: true,
-            return: value,
-            message: 'user deleted'
-          });
-        })
-        .catch(err => {
-          logger.error(`💥 Failed to deleted user : ${err.stack}`);
-          return res.status(500).send({
-            success: false,
-            message: `${err.name} : ${err.message}`
-          });
+      .then((value) => {
+        logger.info('[API] the user with id : ' + idUser + ' has been deleted');
+        return res.status(200).send({
+          success: true,
+          return: value,
+          message: 'user deleted'
         });
-      }
-    );
+      })
+      .catch(err => {
+        logger.error(`💥 Failed to deleted user : ${err.stack}`);
+        return res.status(500).send({
+          success: false,
+          message: `${err.name} : ${err.message}`
+        });
+      });
+  }
+);
 
-module.exports = { apiUsers, apiUsersProtected };
+module.exports = {apiUsers, apiUsersProtected};

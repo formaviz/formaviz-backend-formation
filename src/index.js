@@ -1,6 +1,6 @@
 const app = require('./api/index');
 const db = require('./model');
-const logger = require('./logger').logger;
+const logger = require('./logger');
 
 const port = process.env.PORT || 8080;
 const ip = process.env.IP || '0.0.0.0';
