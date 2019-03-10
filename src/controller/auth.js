@@ -1,36 +1,22 @@
-/* eslint-disable linebreak-style */
-// Load Passport
-const passport = require('passport');
-const Auth0Strategy = require('passport-auth0');
+const jwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
 const request = require('request');
 
 const { logger } = require('../logger');
 
-// Configure Passport to use Auth0
-const strategy = new Auth0Strategy(
-  {
-    domain: process.env.AUTH0_DOMAIN,
-    clientID: process.env.AUTH0_CLIENT_ID,
-    clientSecret: process.env.AUTH0_CLIENT_SECRET,
-    callbackURL:
-      process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/callback',
-  },
-  (accessToken, refreshToken, extraParams, profile, done) =>
-    // accessToken is the token to call Auth0 API (not needed in the most cases)
-    // extraParams.id_token has the JSON Web Token
-    // profile has all the information from the user
-    done(null, profile)
-);
+const checkJwt = jwt({
+  // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
+  }),
 
-passport.use(strategy);
-
-// You can use this section to keep a smaller payload
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
+  // Validate the audience and the issuer.
+  audience: process.env.AUTH0_AUDIENCE,
+  issuer: `https://${process.env.AUTH0_DOMAIN}/`,
+  algorithms: ['RS256'],
 });
 
 const login = (email, password) => {
@@ -50,6 +36,7 @@ const login = (email, password) => {
     json: true,
   };
 
+  logger.info('Contacting Auth0 ...');
   return new Promise((resolve, reject) =>
     request(options, (error, response, body) =>
       error ? reject(new Error(error)) : resolve(body.access_token)
@@ -57,4 +44,4 @@ const login = (email, password) => {
   );
 };
 
-module.exports = { login, passport };
+module.exports = { checkJwt, login };
