@@ -2,10 +2,15 @@ const express = require('express');
 const jwt = require('jwt-simple');
 const { createTraining, getTrainings } = require('../controller/trainings');
 const { logger } = require('../logger');
+const { validateSchema, TRAINING_SCHEMA } = require('../service/json-validator');
 
 const apiTrainings = express.Router();
 
 apiTrainings.post('/', (req, res) => {
+    const valid = validateSchema(TRAINING_SCHEMA, req.body);
+    if (!valid.valid) {
+        return res.status(400).send(valid.erros);
+    }
     createTraining(req.body)
     .then(training => {
         logger.info(' api training successfully created %s', training.name);

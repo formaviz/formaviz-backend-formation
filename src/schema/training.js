@@ -39,38 +39,28 @@ const TrainingSchema = {
       'maximum': 15,
       'minimum': 0
     },
-    'schoolName': {
-      'type': 'string',
+    'school': {
+      'type': 'object',
+      'properties': {
+        'schoolName': {
+          'type': 'string',
+        },
+        'schoolDescription': {
+          'type': 'string',
+          'nullable': true,
+        },
+        'schoolAddress': {
+          'type': 'string',
+        },
+        'schoolPostalCode': {
+          'type': 'string'
+        },
+        'schoolCity': {
+          'type': 'string',
+          'nullable': true,
+        },
+      }
     },
-    'schoolDescription': {
-      'type': 'string',
-      'nullable': true,
-    },
-    'schoolAddress': {
-      'type': 'string',
-    },
-    'schoolPostalCode': {
-      'type': 'string'
-    },
-    'schoolCity': {
-      'type': 'string',
-      'nullable': true,
-    },
-    'lowestScore': {
-      'type': 'integer',
-      'minimum': 0,
-      'nullable': true,
-    },
-    'highestScore': {
-      'type': 'integer',
-      'minimum': 0,
-      'nullable': true,
-    },
-    'averageScore': {
-      'type': 'integer',
-      'minimum': 0,
-      'nullable': true,
-    }
   }
 };
 

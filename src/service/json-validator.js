@@ -20,8 +20,8 @@ ajv.addSchema(UserLoginSchema, USER_LOGIN_SCHEMA);
 ajv.addSchema(UserUpdateSchema, USER_UPDATE_SCHEMA);
 ajv.addSchema(TrainingSchema, TRAINING_SCHEMA);
 
-const validateSchema = (schemaName, user) => {
-  const valid = ajv.validate(schemaName, user);
+const validateSchema = (schemaName, body) => {
+  const valid = ajv.validate(schemaName, body);
 
   return {valid, erros: ajv.errorsText()};
 };
