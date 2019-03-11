@@ -4,7 +4,7 @@ const jwt = require('jwt-simple');
 const {createUser, loginUser, updateUser, deleteUser} = require('../controller/users');
 const {logger} = require('../logger');
 const {
-  jsonValidator,
+  validateSchema,
   USER_CREATION_SCHEMA
   } = require('../service/json-validator');
 
@@ -27,7 +27,7 @@ const apiUsers = express.Router();
  */
 apiUsers.post('/', (req, res) => {
     logger.info(' received request to create user %s %s ', req.body.firstName, req.body.lastName);
-    const valid = jsonValidator.validateUser(USER_CREATION_SCHEMA, req.body);
+    const valid = validateSchema(USER_CREATION_SCHEMA, req.body);
     return (!valid.valid) ?
       (res.status(400).send({
         success: false,
