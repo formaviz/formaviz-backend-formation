@@ -17,7 +17,8 @@ const TrainingSchema = {
     'admLevel': {
       'type': 'array',
       'items': {
-        'type': 'string'
+        'type': 'string',
+        'format': 'uid'
       },
     },
     'partTime': {
