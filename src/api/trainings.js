@@ -11,7 +11,7 @@ apiTrainings.post('/', (req, res) => {
     if (!valid.valid) {
         return res.status(400).send(valid.erros);
     }
-    createTraining(req.body)
+    return createTraining(req.body)
     .then(training => {
         logger.info(' api training successfully created %s', training.name);
         return res.status(201).send({
