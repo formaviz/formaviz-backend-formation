@@ -1,5 +1,7 @@
+const TRAINING_SCHEMA = 'TrainingSchema';
+
 const TrainingSchema = {
-  title: 'Training',
+  title: TRAINING_SCHEMA,
   type: 'object',
   properties: {
     name: {
@@ -21,6 +23,10 @@ const TrainingSchema = {
         maximum: 15,
         minimum: 0,
       },
+    },
+    diplomaLevel: {
+      type: 'integer',
+      nullable: true,
     },
     partTime: {
       type: 'boolean',
@@ -70,6 +76,38 @@ const TrainingSchema = {
   },
 };
 
+const RABBIT_TRAINING_SCHEMA = 'RabbitTrainingSchema';
+
+const RabbitTrainingSchema = {
+  title: RABBIT_TRAINING_SCHEMA,
+  type : 'object',
+  properties: {
+    action: {
+      type: 'string',
+      nullable: false
+    },
+    state: {
+      type: 'string',
+      nullable: false
+    },
+    message: {
+      type: 'object',
+      nullable: false,
+      properties: {
+        url: {
+          type: 'string',
+          format: 'uri',
+          nullable: false
+        }
+
+      }
+    }
+  },
+};
+
 module.exports = {
   TrainingSchema,
+  RabbitTrainingSchema,
+  TRAINING_SCHEMA,
+  RABBIT_TRAINING_SCHEMA,
 };

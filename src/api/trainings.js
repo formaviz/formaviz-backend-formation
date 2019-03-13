@@ -1,9 +1,11 @@
-/* eslint-disable linebreak-style */
 const express = require('express');
-const { createTraining, getTrainings, getTrainingById } = require('../controller/trainings');
-const { checkJwt, getUser } = require('../controller/auth');
-const { logger } = require('../logger');
-const {validateSchema, TRAINING_SCHEMA,} = require('../service/json-validator');
+
+/* eslint-disable linebreak-style */
+const {createTraining, getTrainings, getTrainingById} = require('../controller/trainings');
+const {checkJwt, getUser} = require('../controller/auth');
+const {logger} = require('../logger');
+const {validateSchema} = require('../service/json-validator');
+const {TRAINING_SCHEMA} = require('../schema/training');
 
 const apiTrainings = express.Router();
 
@@ -12,7 +14,7 @@ apiTrainings.post('/', [checkJwt, getUser], (req, res) => {
   if (!valid.valid) {
     return res.status(400).send(valid.erros);
   }
-  return createTraining(req.body)
+  return createTraining(req.body, req.user)
     .then(training => {
       logger.info(' api training successfully created %s', training.name);
       return res.status(201).send({
@@ -36,10 +38,10 @@ apiTrainings.get('/', (req, res) => {
 
   getTrainings(req.query)
     .then(trainings => res.status(201).send({
-        success: true,
-        trainings,
-        message: 'trainings retrieved',
-      }))
+      success: true,
+      trainings,
+      message: 'trainings retrieved',
+    }))
     .catch(err => {
       logger.error(`💥 Failed to get trainings : ${err.stack}`);
       return res.status(500).send({
@@ -55,10 +57,10 @@ apiTrainings.get('/:idTraining', (req, res) => {
 
   getTrainingById(req.params.idTraining)
     .then(training => res.status(201).send({
-        success: true,
-        training,
-        message: 'training retrieved',
-      }))
+      success: true,
+      training,
+      message: 'training retrieved',
+    }))
     .catch(err => {
       logger.error(`💥 Failed to get training : ${err.stack}`);
       return res.status(500).send({
@@ -68,4 +70,4 @@ apiTrainings.get('/:idTraining', (req, res) => {
     });
 });
 
-module.exports = { apiTrainings };
+module.exports = {apiTrainings};

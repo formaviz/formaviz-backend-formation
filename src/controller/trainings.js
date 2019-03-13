@@ -1,21 +1,50 @@
 /* eslint-disable linebreak-style */
-const { Trainings } = require('../model');
-const { logger } = require('../logger');
+const {createMessage, sendTrainingMessage} = require('../service/rabbit-sender');
+const {logger} = require('../logger');
+const {Trainings} = require('../model');
+const {validateSchema} = require('../service/json-validator');
+const {RABBIT_TRAINING_SCHEMA} = require('../schema/training');
+
 const db = require('../model/index');
-const sequelize = db.sequelize;
+
+const {sequelize} = db;
+
+const addChannelToTraining = (msg, idTraining) => {
+  const content = JSON.parse(msg.content.toString());
+  const valid = validateSchema(RABBIT_TRAINING_SCHEMA, content);
+
+  if (valid.valid) {
+    Trainings.update({
+        chanCreated: true,
+        channelUri: content.message.url
+      }, {
+        where: {idTraining}
+      })
+      .then(() => Promise.resolve());
+  }
+};
+
+const createChannel = (name, city, idTraining, user) => {
+  const rabbitMsg = createMessage(
+    'CREATE_FORMATION',
+    `${name}_${city}`,
+    idTraining,
+    user);
+  sendTrainingMessage(rabbitMsg, idTraining, addChannelToTraining);
+};
 
 const createTraining = ({
-  name,
-  description,
-  logoPath,
-  admLevel,
-  expertise,
-  diplomaLevel,
-  duration,
-  partTime,
-  link,
-  school,
-}) => {
+                          name,
+                          description,
+                          logoPath,
+                          admLevel,
+                          expertise,
+                          diplomaLevel,
+                          duration,
+                          partTime,
+                          link,
+                          school,
+                        }, user) => {
   logger.info(' [ Controller ] createTraining %s', name);
   return Trainings.create({
     name,
@@ -35,6 +64,7 @@ const createTraining = ({
     schoolDescription: school.description || '',
   }).then(training => {
     logger.info(' Controller adding admLevel to new training');
+    createChannel(name, school.city, training.idTraining, user);
     training.addAdmissionLevels(admLevel);
     return training;
   });
@@ -43,72 +73,70 @@ const createTraining = ({
 const checkLowestScore = (training) => {
   logger.info(' [ Controller ] check Lowest Score for training %s', training.idTraining);
 
-    const query = 'UPDATE "Trainings" t set "lowestScore"=(SELECT min("score") FROM "Ratings" r WHERE  r."trainingId" = ? AND r."deletedAt" IS NULL) WHERE t."idTraining"= ? RETURNING *';
-    return sequelize
-        .query(query, {
-            replacements: [training.idTraining, training.idTraining],
-            type: sequelize.QueryTypes.UPDATE,
-            raw: true,
-        })
-        .then(result => {
-            logger.info(' [ Controller Trainings ] lowest score %s', result[0][0].lowestScore);
-            console.log('result ',result);
-            console.log('result[0][0] ', result[0][0]);
-            return result[0][0];
-        });
+  const query = 'UPDATE "Trainings" t set "lowestScore"=(SELECT min("score") FROM "Ratings" r WHERE  r."trainingId" = ? AND r."deletedAt" IS NULL) WHERE t."idTraining"= ? RETURNING *';
+  return sequelize
+    .query(query, {
+      replacements: [training.idTraining, training.idTraining],
+      type: sequelize.QueryTypes.UPDATE,
+      raw: true,
+    })
+    .then(result => {
+      logger.info(' [ Controller Trainings ] lowest score %s', result[0][0].lowestScore);
+      return result[0][0];
+    });
 };
 
 const checkHighestScore = (training) => {
   logger.info(' [ Controller ] check Highest Score for training %s', training.idTraining);
-    const query = 'UPDATE "Trainings" t set "highestScore"=(SELECT max("score") FROM "Ratings" r WHERE  r."trainingId" = ? AND r."deletedAt" IS NULL) WHERE t."idTraining"= ? RETURNING *';
-    return sequelize
-        .query(query, {
-            replacements: [training.idTraining, training.idTraining],
-            type: sequelize.QueryTypes.UPDATE,
-            raw: true,
-        })
-        .then(result => {
-            logger.info(' [ Controller Trainings ] highest score %s', result[0][0].lowestScore);
-            console.log('result ',result);
-            return result[0][0];
-        });
+  const query = 'UPDATE "Trainings" t set "highestScore"=(SELECT max("score") FROM "Ratings" r WHERE  r."trainingId" = ? AND r."deletedAt" IS NULL) WHERE t."idTraining"= ? RETURNING *';
+  return sequelize
+    .query(query, {
+      replacements: [training.idTraining, training.idTraining],
+      type: sequelize.QueryTypes.UPDATE,
+      raw: true,
+    })
+    .then(result => {
+      logger.info(' [ Controller Trainings ] highest score %s', result[0][0].lowestScore);
+      logger.debug('result ', result);
+      return result[0][0];
+    });
 };
 
 const updateAverageScore = (training) => {
   logger.info(' [ Controller ] update average score for training %s', training.idTraining);
 
-    const query = 'SELECT AVG (score) FROM "Ratings" WHERE "trainingId" = ? AND "deletedAt" IS NULL';
-    return sequelize.query(query, {
-        replacements: [training.idTraining],
-        type: sequelize.QueryTypes.SELECT,
-        raw: true,
-      })
-      .then(result => {
-        logger.info(' [ Controller ] computed average score %s', result[0].avg);
-        console.log(result);
-        Trainings.update(
-          {
-            averageScore: result[0].avg,
-          },
-          { where: { idTraining: training.idTraining } }
-        ).then(() =>
-          training && !training.deletedAt
-            ? Promise.resolve(training)
-            : Promise.reject(new Error('Unknown or deleted training'))
-        );
-      });
+  const query = 'SELECT AVG (score) FROM "Ratings" WHERE "trainingId" = ? AND "deletedAt" IS NULL';
+  return sequelize.query(query, {
+      replacements: [training.idTraining],
+      type: sequelize.QueryTypes.SELECT,
+      raw: true,
+    })
+    .then(result => {
+      logger.info(' [ Controller ] computed average score %s', result[0].avg);
+      logger.debug(result);
+      Trainings.update(
+        {
+          averageScore: result[0].avg,
+        },
+        {where: {idTraining: training.idTraining}}
+      ).then(() =>
+        training && !training.deletedAt
+          ? Promise.resolve(training)
+          : Promise.reject(new Error('Unknown or deleted training'))
+      );
+    });
 };
 
 const getTrainings = ({
-  admLevel,
-  diplomaLevel,
-  partTime,
-  expertise,
-  duration,
-  dep,
-  city,
-  region,
-}) => {
+                        admLevel,
+                        diplomaLevel,
+                        partTime,
+                        expertise,
+                        duration,
+                        dep,
+                        city,
+                        region,
+                      }) => {
   logger.info(' [ Controller Trainings ]  getTraining()');
 
   let query =
@@ -139,11 +167,11 @@ const getTrainings = ({
         diplomaLevel,
         admLevel,
         partTime,
-        expertise: `%${  expertise  }%`,
+        expertise: `%${expertise}%`,
         duration,
         dep,
-        city: `%${  city  }%`,
-        region: `%${  region  }%`,
+        city: `%${city}%`,
+        region: `%${region}%`,
       },
       type: sequelize.QueryTypes.SELECT,
     })
@@ -151,27 +179,31 @@ const getTrainings = ({
 };
 
 const getTrainingById = (idTraining) => {
-    logger.info(' [ Controller Training ]  getTrainingById %s', idTraining);
-    return Trainings.findOne({
-        where: { idTraining }
-    }).then(training => {
-        return training && !training.deletedAt
-            ? training : Promise.reject(new Error('Unknown or deleted training'))}
-    );
+  logger.info(' [ Controller Training ]  getTrainingById %s', idTraining);
+  return Trainings.findOne({
+    where: {idTraining}
+  }).then(training => {
+      return training && !training.deletedAt
+        ? training : Promise.reject(new Error('Unknown or deleted training'));
+    }
+  );
 };
 
-const updateAllScores = (idTraining) =>  {
-    return Trainings.findOne({where :{ idTraining }})
-        .then(training => {
-            logger.info(' [ Controller Trainings ] checkLowestScore to do on training %s', training.idTraining);
-            return checkLowestScore(training) })
-        .then(training => {
-            logger.info(' [ Controller Trainings ] checkHighestScore to do on training %s', training.idTraining);
-            return checkHighestScore(training) })
-        .then(training => {
-            logger.info(' [  Controller Trainings ] updateAverageScore on training %s', training.idTraining);
-            return updateAverageScore(training) })
-        .then(training => training)
+const updateAllScores = (idTraining) => {
+  return Trainings.findOne({where: {idTraining}})
+    .then(training => {
+      logger.info(' [ Controller Trainings ] checkLowestScore to do on training %s', training.idTraining);
+      return checkLowestScore(training);
+    })
+    .then(training => {
+      logger.info(' [ Controller Trainings ] checkHighestScore to do on training %s', training.idTraining);
+      return checkHighestScore(training);
+    })
+    .then(training => {
+      logger.info(' [  Controller Trainings ] updateAverageScore on training %s', training.idTraining);
+      return updateAverageScore(training);
+    })
+    .then(training => training);
 };
 
 module.exports = {

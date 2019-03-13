@@ -6,6 +6,7 @@ const { login, signup } = require('../controller/auth');
 const { logger } = require('../logger');
 
 apiAuth.post('/login', (req, res) => {
+  /*TODO: use ajv*/
   !req.body.email || !req.body.password
     ? res.status(400).send({
         success: false,
