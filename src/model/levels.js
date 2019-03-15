@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Levels.associate = models => {
         Levels.hasMany(models.Trainings, { foreignKey: 'diplomaLevel' });
-        Levels.belongsToMany(models.Trainings, { through: 'admLevels' });
+        Levels.belongsToMany(models.Trainings,  { as: 'trainingAdmLevels', through: 'admLevels', foreignKey: 'idLevel' });
     };
 
 

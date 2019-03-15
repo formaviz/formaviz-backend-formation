@@ -1,6 +1,8 @@
 /* eslint-disable linebreak-style */
 const { Trainings, Depts } = require('../model');
 const { logger } = require('../logger');
+const Sequelize = require('sequelize');
+var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'postgresql'})
 
 const createTraining = ({name, description, logoPath, admLevel, expertise, diplomaLevel, duration, partTime , link, school}) => {
     logger.info(' controller createTraining %s', name);
@@ -22,31 +24,25 @@ const createTraining = ({name, description, logoPath, admLevel, expertise, diplo
         schoolDescription: school.description || ''
     }).then (training => {
         logger.info(' Controller adding admLevel to new training')
-        training.addLevels(admLevel)
+        training.addAdmissionLevels(admLevel)
         return training
     })
 };
 
 const getTrainings = ({admLevel, diplomaLevel, partTime, expertise, duration, dep, city }) => {
-    logger.info(' controller getTraining diplomaLevel ' + diplomaLevel);
-    logger.info(' controller getTraining admLevel %s', admLevel);
-    return Trainings.findAll({
-        // include: [{
-        //     model: Depts,
-        //     where: {
-        //         idRegion: region
-        //     }
-        // }],
-        where : {
-            admLevel: [admLevel],
-            diplomaLevel: [diplomaLevel],
-            partTime: [partTime],
-            expertise: [expertise],
-            duration: [duration],
-            deptId: [dep],
-            schoolCity: [city]
+    logger.info(' Controller getTraining diplomaLevel ' + diplomaLevel);
+    logger.info(' Controller getTraining admLevels %s', admLevel);
+
+    return sequelize.query('SELECT * FROM "Trainings" LEFT JOIN "admLevels" a on "Trainings"."idTraining" = a."idTraining" WHERE "diplomaLevel" = :diplomaLevel AND  a."idLevel" IN (:admLevel)',
+        {   model: Trainings,
+            mapToModel: true,
+            replacements: { diplomaLevel: diplomaLevel, admLevel: admLevel },
+            type: sequelize.QueryTypes.SELECT
         }
-    }).then(trainings => trainings)
+        ).then(trainings => {
+            logger.info(' Controller found training %s', trainings.idTraining)
+            return trainings
+    })
 };
 
 

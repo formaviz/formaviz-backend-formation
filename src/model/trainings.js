@@ -86,7 +86,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Trainings.associate = models => {
         Trainings.hasMany(models.Ratings, { foreignKey: 'trainingId'});
-        Trainings.belongsToMany(models.Levels, { through: 'admLevels' });
+        Trainings.belongsToMany(models.Levels,  { as: 'admissionLevels', through: 'admLevels', foreignKey: 'idTraining' });
     };
 
     return Trainings;

@@ -32,12 +32,13 @@ apiTrainings.post('/', (req, res) => {
 
 apiTrainings.get('/', (req, res) => {
     logger.info(' apiTrainings diplomaLevel %s', req.query.diplomaLevel);
-    logger.info(' apiTrainings diplomaLevel %s', req.query.admLevel);
-    for (const key in req.query) {
-        logger.info(key, req.query[key])
-    }
-    const admLevel = req.query.admLevel || '*'
-    getTrainings(admLevel, req.query.diplomaLevel, req.query.partTime, req.query.expertise, req.query.duration, req.query.dep, req.query.city)
+    logger.info(' apiTrainings admLevel %s', req.query.admLevel);
+    // for (const key in req.query) {
+    //     logger.info(key, req.query[key])
+    // }
+    const admLevel = req.query.admLevel || '%*';
+        // getTrainings(req.query.admLevel, req.query.diplomaLevel, req.query.partTime, req.query.expertise, req.query.duration, req.query.dep, req.query.city)
+        getTrainings(req.query)
         .then(trainings => {
             return res.status(201).send({
                 success: true,
