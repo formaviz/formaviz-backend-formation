@@ -27,10 +27,6 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.TEXT,
                 comment: 'Training area of expertise'
             },
-            admLevel: {
-                type: DataTypes.TEXT,
-                comment: 'Eligible training backgrounds'
-            },
             partTime: {
                 type: DataTypes.BOOLEAN,
                 comment: 'true if part-time course'
@@ -90,6 +86,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Trainings.associate = models => {
         Trainings.hasMany(models.Ratings, { foreignKey: 'trainingId'});
+        Trainings.belongsToMany(models.Levels, { through: 'admLevels' });
     };
 
     return Trainings;

@@ -20,6 +20,10 @@ const createTraining = ({name, description, logoPath, admLevel, expertise, diplo
         schoolCity: school.city || '',
         deptId: school.cp.substr(0,2),
         schoolDescription: school.description || ''
+    }).then (training => {
+        logger.info(' Controller adding admLevel to new training')
+        training.addLevels(admLevel)
+        return training
     })
 };
 
