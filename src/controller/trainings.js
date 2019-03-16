@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-const { Trainings, Depts } = require('../model');
+const { Trainings } = require('../model');
 const { logger } = require('../logger');
 const Sequelize = require('sequelize');
 var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'postgresql'})
@@ -30,20 +30,22 @@ const createTraining = ({name, description, logoPath, admLevel, expertise, diplo
 };
 
 const getTrainings = ({admLevel, diplomaLevel, partTime, expertise, duration, dep, city, region }) => {
-    logger.info(' Controller getTraining diplomaLevel ' + diplomaLevel);
-    logger.info(' Controller getTraining admLevels %s', admLevel);
+    logger.info(' [ Controller ]  getTraining()' );
 
-    let query = 'SELECT distinct * FROM "Trainings" LEFT JOIN "admLevels" a on "Trainings"."idTraining" = a."idTraining" LEFT JOIN "Depts" d on "Trainings"."deptId" = d."idDept" WHERE ';
+    let query = 'SELECT to_json(sub) AS training FROM  (SELECT t.*, d."deptName", d."regionName", json_agg(l."grade") AS "admLevels", (SELECT l."grade" FROM "Levels" l WHERE l."idLevel" = t."diplomaLevel") as "diplomaName" FROM "Trainings" t LEFT JOIN "admLevels" a on t."idTraining" = a."idTraining" LEFT JOIN "Levels" l on a."idLevel" = l."idLevel" LEFT JOIN "Depts" d on t."deptId" = d."idDept" WHERE ';
+
     if (admLevel) query += 'a."idLevel" IN (:admLevel) AND ';
     if (diplomaLevel) query += '"diplomaLevel" = :diplomaLevel AND ';
     if (partTime) query += '"partTime" = :partTime AND ';
-    if (expertise) query += '"expertise" LIKE :expertise AND ';
+    if (expertise) query += 'LOWER("expertise") LIKE LOWER(:expertise) AND ';
     if (duration) query += '"duration" = :duration AND ';
     if (dep) query += '"deptId" = :dep AND ';
-    if (city) query += '"city" LIKE :city AND ';
-    if (region) query += 'd."regionName" LIKE :region';
+    if (city) query += 'LOWER("schoolCity") LIKE LOWER(:city) AND ';
+    if (region) query += 'LOWER(d."regionName") LIKE LOWER(:region) ';
 
     if (query.substring(query.length -4) === 'AND ') query = query.substr(0, query.length - 4);
+
+    query += 'GROUP BY t."idTraining", d."deptName", d."regionName") sub'
     logger.info(' Controller getTraining QUERY [%s]', query);
 
     return sequelize.query(query,
