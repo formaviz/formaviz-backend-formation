@@ -61,7 +61,6 @@ INSERT INTO "Depts" VALUES('46', 'Lot', 'FR-OCC', 'Occitanie', LOCALTIMESTAMP, L
 INSERT INTO "Depts" VALUES('47', 'Lot-et-Garonne', 'FR-NAQ', 'Nouvelle-Aquitaine', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('48', 'Lozère', 'FR-OCC', 'Occitanie', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('49', 'Maine-et-Loire', 'FR-PDL', 'Pays de la Loire', LOCALTIMESTAMP, LOCALTIMESTAMP);
-INSERT INTO "Depts" VALUES('50', 'Manche', 'FR-NOR', 'Normandie', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('51', 'Marne', 'FR-GES', 'Grand Est', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('52', 'Haute-Marne', 'FR-GES', 'Grand Est', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('53', 'Mayenne', 'FR-PDL', 'Pays de la Loire', LOCALTIMESTAMP, LOCALTIMESTAMP);
@@ -82,7 +81,6 @@ INSERT INTO "Depts" VALUES('67', 'Bas-Rhin', 'FR-GES', 'Grand Est', LOCALTIMESTA
 INSERT INTO "Depts" VALUES('68', 'Haut-Rhin', 'FR-GES', 'Grand Est', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('69', 'Rhône', 'FR-ARA', 'Auvergne-Rhône-Alpes', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('70', 'Haute-Saône', 'FR-BFC', 'Bourgogne-Franche-Comté', LOCALTIMESTAMP, LOCALTIMESTAMP);
-INSERT INTO "Depts" VALUES('71', 'Saône-et-Loire', 'FR-BFC', 'Bourgogne-Franche-Comté', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('72', 'Sarthe', 'FR-PDL', 'Pays de la Loire', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('73', 'Savoie', 'FR-ARA', 'Auvergne-Rhône-Alpes', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('74', 'Haute-Savoie', 'FR-ARA', 'Auvergne-Rhône-Alpes', LOCALTIMESTAMP, LOCALTIMESTAMP);
@@ -107,3 +105,7 @@ INSERT INTO "Depts" VALUES('92', 'Hauts-de-Seine', 'FR-IDF', 'Ile-de-France', LO
 INSERT INTO "Depts" VALUES('93', 'Seine-Saint-Denis', 'FR-IDF', 'Ile-de-France', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('94', 'Val-de-Marne', 'FR-IDF', 'Ile-de-France', LOCALTIMESTAMP, LOCALTIMESTAMP);
 INSERT INTO "Depts" VALUES('95', 'Val-d Oise', 'FR-IDF', 'Ile-de-France', LOCALTIMESTAMP, LOCALTIMESTAMP);
+INSERT INTO "Depts" VALUES('50', 'Manche', 'FR-NOR', 'Normandie', LOCALTIMESTAMP, LOCALTIMESTAMP);
+INSERT INTO "Depts" VALUES('71', 'Saône-et-Loire', 'FR-BFC', 'Bourgogne-Franche-Comté', LOCALTIMESTAMP, LOCALTIMESTAMP);
+
+INSERT INTO "Users" VALUES('aa6dc629-9dfc-446c-a13f-823db998ea9b', 'Mitch', 'DechaineLaFureur', 'ADMIN', 'mitch.dechaine.la.fureur@test.com', LOCALTIMESTAMP, LOCALTIMESTAMP);

@@ -5,7 +5,7 @@ const Sequelize = require('sequelize');
 var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'postgresql'})
 
 const createTraining = ({name, description, logoPath, admLevel, expertise, diplomaLevel, duration, partTime , link, school}) => {
-    logger.info(' controller createTraining %s', name);
+    logger.info(' [ Controller ] createTraining %s', name);
     return Trainings.create ({
         name,
         description: description || '',
@@ -28,6 +28,7 @@ const createTraining = ({name, description, logoPath, admLevel, expertise, diplo
         return training
     })
 };
+
 
 const getTrainings = ({admLevel, diplomaLevel, partTime, expertise, duration, dep, city, region }) => {
     logger.info(' [ Controller ]  getTraining()' );

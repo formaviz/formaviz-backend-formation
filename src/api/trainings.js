@@ -32,8 +32,7 @@ apiTrainings.post('/', (req, res) => {
 
 
 apiTrainings.get('/', (req, res) => {
-    logger.info(' apiTrainings diplomaLevel %s', req.query.diplomaLevel);
-    logger.info(' apiTrainings admLevel %s', req.query.admLevel);
+    logger.info(' [ apiTrainings ] GET Training by query param ');
 
     getTrainings(req.query)
     .then(trainings => {

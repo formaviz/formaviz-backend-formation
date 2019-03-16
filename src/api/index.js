@@ -8,6 +8,7 @@ const { checkJwt } = require('../controller/auth');
 const apiAuth = require('./auth');
 const { apiUsers, apiUsersProtected } = require('./users');
 const { apiTrainings } = require('./trainings');
+const { apiRatings } = require('./ratings');
 
 const app = express();
 
@@ -28,6 +29,7 @@ apiRoutes
   //  .use(isAuthenticated)
   .use('/users', apiUsersProtected)
   .use('/trainings', apiTrainings)
+  .use('/rates', apiRatings)
   .use((err, req, res, next) => {
     res.status(403).send({
       success: false,

@@ -8,11 +8,6 @@ module.exports = (sequelize, DataTypes) => {
         comment: 'Rating id',
         primaryKey: true
       },
-      idUser: {
-        type: DataTypes.STRING,
-        comment: 'User id',
-        allowNull: false
-      },
       comment: {
         type: DataTypes.TEXT,
         comment: 'User comment'
