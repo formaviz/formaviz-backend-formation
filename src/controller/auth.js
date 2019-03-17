@@ -44,4 +44,27 @@ const login = (email, password) => {
   );
 };
 
-module.exports = { checkJwt, login };
+const signup = (email, password, metadata) => {
+  const options = {
+    method: 'POST',
+    url: `https://${process.env.AUTH0_DOMAIN}/dbconnections/signup`,
+    headers: { 'content-type': 'application/json' },
+    body: {
+      client_id: process.env.AUTH0_CLIENT_ID,
+      email: email,
+      password: password,
+      connection: 'Formaviz-Auth0-Database',
+      user_metadata: metadata || {},
+    },
+    json: true,
+  };
+
+  logger.info('Contacting Auth0 ...');
+  return new Promise((resolve, reject) =>
+    request(options, (error, response, body) =>
+      error ? reject(new Error(error)) : resolve(body)
+    )
+  );
+};
+
+module.exports = { checkJwt, login, signup };
