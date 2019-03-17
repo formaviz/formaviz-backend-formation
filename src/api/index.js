@@ -18,8 +18,18 @@ const apiRoutes = express.Router();
 app.use(bodyParser.urlencoded());
 app.use(expressPino);
 
+apiRoutes.use((req, res, next) => {
+  req.log.info();
+  next();
+});
+
 apiRoutes.get('/', (req, res) => {
-  res.status(200).send({ message: 'Hello from my awesome app !' });
+  res.status(200).send({ message: 'Hello from formaviz api !' });
+});
+
+/* Example of protected route, just use checkJwt middleware */
+apiRoutes.get('/private', checkJwt, (req, res) => {
+  res.status(200).send({ message: 'Your token is valid :-)' });
 });
 
 apiRoutes
@@ -57,6 +67,6 @@ apiRoutes.use((err, req, res, next) => {
 });
 
 apiRoutes.use(apiAuth);
+app.use('/api/v1', apiRoutes);
 
-app.use('/api/v1', apiRoutes).use('/api/v1', apiAuth);
 module.exports = app;
