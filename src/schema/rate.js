@@ -16,7 +16,7 @@ const RateSchema = {
     },
     'trainingId': {
       'type': 'string',
-      'format': 'uid'
+      'format': 'uuid'
     }
   }
 };

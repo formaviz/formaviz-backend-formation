@@ -9,6 +9,8 @@ const apiAuth = require('./auth');
 const { apiUsers, apiUsersProtected } = require('./users');
 const { apiTrainings } = require('./trainings');
 const { apiRatings } = require('./ratings');
+const { apiLevels } = require('./levels');
+const { apiDepts } = require('./depts');
 
 const app = express();
 
@@ -40,6 +42,8 @@ apiRoutes
   .use('/users', apiUsersProtected)
   .use('/trainings', apiTrainings)
   .use('/rates', apiRatings)
+  .use('/levels', apiLevels)
+  .use('/depts', apiDepts)
   .use((err, req, res, next) => {
     res.status(403).send({
       success: false,

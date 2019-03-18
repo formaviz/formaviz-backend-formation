@@ -2,7 +2,12 @@
 const { Trainings } = require('../model');
 const { logger } = require('../logger');
 const Sequelize = require('sequelize');
-var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'postgresql'})
+// var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'postgresql'})
+const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
+    host: process.env.DATABASE_HOST,
+    dialect: 'postgres'
+});
+
 
 const createTraining = ({name, description, logoPath, admLevel, expertise, diplomaLevel, duration, partTime , link, school}) => {
     logger.info(' [ Controller ] createTraining %s', name);
@@ -30,6 +35,59 @@ const createTraining = ({name, description, logoPath, admLevel, expertise, diplo
 };
 
 
+const checkLowestScore = (training, newScore) =>  {
+    logger.info(' [ Controller ] check Lowest Score for training %s', training.idTraining);
+    if (!training.lowestScore || training.lowestScore > newScore) {
+        return Trainings.update({
+                lowestScore: newScore
+            },
+            { where: { idTraining: training.idTraining } })
+            .then(()  =>  training && !training.deletedAt ? Promise.resolve(training) : Promise.reject(new Error('Unknown training')));
+    }
+    return Promise.resolve(training)
+};
+
+
+const checkHighestScore = (training, newScore) =>  {
+    logger.info(' [ Controller ] check Highest Score for training %s', training.idTraining);
+    if (!training.highestScore || training.highestScore < newScore) {
+        return Trainings.update({
+                highestScore: newScore
+            },
+            { where: { idTraining: training.idTraining } })
+            .then(()  =>  training && !training.deletedAt ? Promise.resolve(training) : Promise.reject(new Error('Unknown training')));
+    }
+    return Promise.resolve(training)
+};
+
+
+const updateAverageScore = (training, newScore) =>  {
+    logger.info(' [ Controller ] update average score for training %s', training.idTraining);
+    if (!training.averageScore) {
+        Trainings.update({
+                averageScore: newScore
+            },
+            { where: { idTraining: training.idTraining } })
+            .then(()  =>  training && !training.deletedAt ? Promise.resolve(training) : Promise.reject(new Error('Unknown training')));
+    }
+    else {
+        const query = 'SELECT AVG (score) FROM "Ratings" WHERE "trainingId" = ?';
+        return sequelize.query(query, { replacements: [ training.idTraining ] , type: sequelize.QueryTypes.SELECT, raw: true })
+            .then(result => {
+                logger.info(' [ Controller ] computed average score %s',result[0].avg);
+                console.log(result);
+                Trainings.update({
+                        averageScore: result[0].avg
+                    },
+                    { where: { idTraining: training.idTraining } })
+                    .then(()  =>  training && !training.deletedAt ? Promise.resolve(training) : Promise.reject(new Error('Unknown training')));
+            })
+    }
+    return Promise.resolve(training)
+};
+
+
+
 const getTrainings = ({admLevel, diplomaLevel, partTime, expertise, duration, dep, city, region }) => {
     logger.info(' [ Controller ]  getTraining()' );
 
@@ -45,6 +103,7 @@ const getTrainings = ({admLevel, diplomaLevel, partTime, expertise, duration, de
     if (region) query += 'LOWER(d."regionName") LIKE LOWER(:region) ';
 
     if (query.substring(query.length -4) === 'AND ') query = query.substr(0, query.length - 4);
+    if (query.substring(query.length -6) === 'WHERE ') query = query.substr(0, query.length - 6);
 
     query += 'GROUP BY t."idTraining", d."deptName", d."regionName") sub'
     logger.info(' Controller getTraining QUERY [%s]', query);
@@ -72,5 +131,8 @@ const getTrainings = ({admLevel, diplomaLevel, partTime, expertise, duration, de
 
 module.exports = {
     createTraining,
-    getTrainings
+    getTrainings,
+    checkLowestScore,
+    checkHighestScore,
+    updateAverageScore
 };
