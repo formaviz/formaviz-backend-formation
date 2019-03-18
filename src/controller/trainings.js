@@ -1,8 +1,13 @@
 /* eslint-disable linebreak-style */
-const { Trainings, Ratings } = require('../model');
+const { Trainings } = require('../model');
 const { logger } = require('../logger');
 const Sequelize = require('sequelize');
-var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'postgresql'})
+// var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'postgresql'})
+const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
+    host: process.env.DATABASE_HOST,
+    dialect: 'postgres'
+});
+
 
 const createTraining = ({name, description, logoPath, admLevel, expertise, diplomaLevel, duration, partTime , link, school}) => {
     logger.info(' [ Controller ] createTraining %s', name);
