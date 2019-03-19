@@ -1,17 +1,8 @@
 /* eslint-disable linebreak-style */
 const { Trainings } = require('../model');
 const { logger } = require('../logger');
-const Sequelize = require('sequelize');
-// var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'postgresql'})
-const sequelize = new Sequelize(
-  process.env.DATABASE_NAME,
-  process.env.DATABASE_USER,
-  process.env.DATABASE_PASSWORD,
-  {
-    host: process.env.DATABASE_HOST,
-    dialect: 'postgres',
-  }
-);
+const db = require('../model/index');
+const sequelize = db.sequelize;
 
 const createTraining = ({
   name,

@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 module.exports = (sequelize, DataTypes) => {
   const Trainings = sequelize.define(
     'Trainings',
@@ -75,6 +76,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.FLOAT,
         comment: 'average score of training',
       },
+      chanCreated: {
+        type: DataTypes.BOOLEAN,
+        comment: 'Slack channel created',
+        defaultValue: false
+      }
     },
     {
       paranoid: true,

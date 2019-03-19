@@ -3,10 +3,7 @@ const express = require('express');
 const jwt = require('jwt-simple');
 const { createTraining, getTrainings } = require('../controller/trainings');
 const { logger } = require('../logger');
-const {
-  validateSchema,
-  TRAINING_SCHEMA,
-} = require('../service/json-validator');
+const {validateSchema, TRAINING_SCHEMA,} = require('../service/json-validator');
 
 const apiTrainings = express.Router();
 

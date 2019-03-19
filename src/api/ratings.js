@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
 const jwt = require('jwt-simple');
-const { checkJwt } = require('../controller/auth');
+const { checkJwt, getUser } = require('../controller/auth');
 const { createRating, getRatings } = require('../controller/ratings');
 const { logger } = require('../logger');
 const { validateSchema, RATE_SCHEMA } = require('../service/json-validator');
@@ -9,14 +9,14 @@ const { validateSchema, RATE_SCHEMA } = require('../service/json-validator');
 const apiRatings = express.Router();
 
 // apiRatings.post('/', checkJwt, (req, res) => {
-apiRatings.post('/', (req, res) => {
+apiRatings.post('/', [checkJwt, getUser], (req, res) => {
     logger.info(' [ Api ] POST Rate');
     const valid = validateSchema(RATE_SCHEMA, req.body);
     if (!valid.valid) {
         return res.status(400).send(valid.erros);
     }
     // return createRating(req.body, req.user.id)
-    return createRating(req.body)
+    return createRating(req.body, req.user.sub)
         .then(rating => {
             logger.info(' api rating successfully created rate for user and training %s %s', rating.userOfRating, rating.trainingId);
             return res.status(201).send({

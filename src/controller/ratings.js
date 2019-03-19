@@ -6,16 +6,12 @@ const {
   updateAverageScore,
 } = require('./trainings');
 const { logger } = require('../logger');
-const Sequelize = require('sequelize');
-var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'postgresql'});
-// const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
-//     host: process.env.DATABASE_HOST,
-//     dialect: 'postgres'
-// });
+const db = require('../model/index');
+const sequelize = db.sequelize;
 
 // Story 2 : En tant que « évaluateur », je peux noter une formation, dans le but de partager mon avis
 // const createRating = ({ comment, score, idTraining}, idUser) => {
-const createRating = ({ idUser, comment, score, idTraining }) => {
+const createRating = ({ comment, score, idTraining }, idUser) => {
     logger.info(' [ Controller ] createRating for training %s', idTraining);
     return Ratings.create ({
         userOfRating: idUser,
@@ -45,10 +41,10 @@ const createRating = ({ idUser, comment, score, idTraining }) => {
 
 const getRatings = ({ idUser, idTraining }) => {
     logger.info(' [ Controller ] getRatings ');
-    let query = 'SELECT "idRating", "comment", "score", "trainingId", "userOfRating" FROM "Ratings" WHERE ';
+    let query = 'SELECT "idRating", "comment", "score", "trainingId" as "idTraining" FROM "Ratings" WHERE ';
 
-    if (idTraining) query += '"idTraining" = :idTraining AND ';
-    if (idUser) query += '"idUser" = :idUser ';
+    if (idUser) query += '"userOfRating" =  \'' + idUser + '\' AND ';
+    if (idTraining) query += '"trainingId" = \'' + idTraining + '\' AND ';
 
     if (query.substring(query.length -4) === 'AND ') query = query.substr(0, query.length - 4);
     if (query.substring(query.length -6) === 'WHERE ') query = query.substr(0, query.length - 6);
@@ -56,10 +52,6 @@ const getRatings = ({ idUser, idTraining }) => {
     logger.info(' [ Controller ] getRatings Query %s ', query);
 
     return sequelize.query(query, {
-        replacements: {
-            trainingId: idTraining,
-            userOfRating: idUser
-        },
         type: sequelize.QueryTypes.SELECT,
         raw: true
     })
