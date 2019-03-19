@@ -1,6 +1,10 @@
 /* eslint-disable linebreak-style */
 const { Ratings, Trainings } = require('../model');
-const { checkLowestScore, checkHighestScore, updateAverageScore } = require ('./trainings');
+const {
+  checkLowestScore,
+  checkHighestScore,
+  updateAverageScore,
+} = require('./trainings');
 const { logger } = require('../logger');
 const Sequelize = require('sequelize');
 var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'postgresql'});
@@ -8,7 +12,6 @@ var sequelize = new Sequelize('postgres', 'postgres', 'password', {'dialect': 'p
 //     host: process.env.DATABASE_HOST,
 //     dialect: 'postgres'
 // });
-
 
 // Story 2 : En tant que « évaluateur », je peux noter une formation, dans le but de partager mon avis
 // const createRating = ({ comment, score, idTraining}, idUser) => {

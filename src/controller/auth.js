@@ -19,6 +19,28 @@ const checkJwt = jwt({
   algorithms: ['RS256'],
 });
 
+const getUser = (req, res, next) => {
+  const options = {
+    method: 'GET',
+    url: `https://${process.env.AUTH0_DOMAIN}/userinfo`,
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': `${req.get('Authorization')}`
+    },
+    json: true,
+  };
+  new Promise((resolve, reject) =>
+    request(options, (error, response, body) =>
+      error ? reject(new Error(error)) : resolve(body)
+    )
+  )
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => logger.error(err));
+};
+
 const login = (email, password) => {
   const options = {
     method: 'POST',
@@ -27,9 +49,9 @@ const login = (email, password) => {
     body: {
       grant_type: 'password',
       username: email,
-      password: password,
-      audience: 'https://formavizz/api/v2',
-      scope: 'read:sample',
+      password,
+      audience: process.env.AUTH0_AUDIENCE,
+      scope: 'read:sample openid',
       client_id: process.env.AUTH0_CLIENT_ID,
       client_secret: process.env.AUTH0_CLIENT_SECRET,
     },
@@ -51,8 +73,8 @@ const signup = (email, password, metadata) => {
     headers: { 'content-type': 'application/json' },
     body: {
       client_id: process.env.AUTH0_CLIENT_ID,
-      email: email,
-      password: password,
+      email,
+      password,
       connection: 'Formaviz-Auth0-Database',
       user_metadata: metadata || {},
     },
@@ -67,4 +89,4 @@ const signup = (email, password, metadata) => {
   );
 };
 
-module.exports = { checkJwt, login, signup };
+module.exports = { checkJwt, getUser, login, signup };

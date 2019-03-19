@@ -12,17 +12,15 @@ apiAuth.post('/login', (req, res) => {
         message: 'email and password required',
       })
     : login(req.body.email, req.body.password)
-        .then(access_token => {
-          return access_token
+        .then(access_token => access_token
             ? res.status(201).send({
                 success: true,
-                access_token: access_token,
+                access_token,
               })
             : res.status(401).send({
                 success: false,
                 message: 'Authentication failed: wrong credentials',
-              });
-        })
+              }))
         .catch(err => {
           logger.error(`Unable to process authentication: ${err}`);
           return res.status(500).send({
@@ -39,12 +37,9 @@ apiAuth.post('/signup', (req, res) => {
         message: 'email and password required',
       })
     : signup(req.body.email, req.body.password, req.body.metadata || null)
-        .then(response => {
-          return response.error || response.statusCode === 400 ?
-            res.status(400).send(response)
-            :
-            res.status(200).send(response)
-        })
+        .then(response => response.error || response.statusCode === 400
+            ? res.status(400).send(response)
+            : res.status(200).send(response))
         .catch(err => {
           logger.error(`Unable to process signup: ${err}`);
           return res.status(500).send({
