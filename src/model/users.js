@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         comment: 'User Id',
-        primaryKey: true
+        primaryKey: true,
       },
       firstName: {
         type: DataTypes.STRING,
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
             'firstName',
             val.charAt(0).toUpperCase() + val.substring(1).toLowerCase()
           );
-        }
+        },
       },
       lastName: {
         type: DataTypes.STRING,
@@ -30,11 +30,11 @@ module.exports = (sequelize, DataTypes) => {
             'lastName',
             val.charAt(0).toUpperCase() + val.substring(1).toLowerCase()
           );
-        }
+        },
       },
       role: {
-          type: DataTypes.STRING,
-          comment: 'Role of user'
+        type: DataTypes.STRING,
+        comment: 'Role of user',
       },
       email: {
         type: DataTypes.STRING,
@@ -43,9 +43,9 @@ module.exports = (sequelize, DataTypes) => {
         comment: 'User email',
         // Field validation
         validate: {
-          isEmail: true
-        }
-      }
+          isEmail: true,
+        },
+      },
     },
     {
       // logical delete over physical delete
@@ -53,14 +53,14 @@ module.exports = (sequelize, DataTypes) => {
       indexes: [
         {
           unique: true,
-          fields: ['email']
-        }
-      ]
+          fields: ['email'],
+        },
+      ],
     }
   );
 
   Users.associate = models => {
-      Users.hasMany(models.Ratings, { foreignKey: 'userOfRating' });
+    Users.hasMany(models.Ratings, { foreignKey: 'userOfRating' });
   };
 
   return Users;

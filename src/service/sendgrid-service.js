@@ -18,15 +18,17 @@ const sendEmail = (to, bcc, subject, text, html) => {
   sgMail.send(msg);
 };
 
-const reportToSupport = (involvedRoute) => {
-  sendEmail(supportEmail,
+const reportToSupport = involvedRoute => {
+  sendEmail(
+    supportEmail,
     null,
     'Error on server',
     `unable to contact ${involvedRoute}, please see logs to correct the problem.`,
-    `<span>unable to contact <strong>${involvedRoute}</strong>, please see logs to correct the problem.</span>`);
+    `<span>unable to contact <strong>${involvedRoute}</strong>, please see logs to correct the problem.</span>`
+  );
 };
 
 module.exports = {
   sendEmail,
-  reportToSupport
+  reportToSupport,
 };

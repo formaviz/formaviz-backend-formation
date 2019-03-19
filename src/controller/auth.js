@@ -22,7 +22,10 @@ const checkJwt = jwt({
 
 const getUser = (req, res, next) => {
   logger.debug('Yup', req.user);
-  const lock = new Auth0Lock(process.env.AUTH0_CLIENT_ID, process.env.AUTH0_DOMAIN);
+  const lock = new Auth0Lock(
+    process.env.AUTH0_CLIENT_ID,
+    process.env.AUTH0_DOMAIN
+  );
   lock.getUserInfo('454', (error, profile) => {
     logger.debug('okdoki');
   });
@@ -37,7 +40,7 @@ const login = (email, password) => {
     body: {
       grant_type: 'password',
       username: email,
-      password: password,
+      password,
       audience: process.env.AUTH0_AUDIENCE,
       scope: 'read:sample',
       client_id: process.env.AUTH0_CLIENT_ID,
@@ -61,8 +64,8 @@ const signup = (email, password, metadata) => {
     headers: { 'content-type': 'application/json' },
     body: {
       client_id: process.env.AUTH0_CLIENT_ID,
-      email: email,
-      password: password,
+      email,
+      password,
       connection: 'Formaviz-Auth0-Database',
       user_metadata: metadata || {},
     },

@@ -35,7 +35,9 @@ apiRoutes.get('/private', [checkJwt, getUser], (req, res) => {
 });
 
 apiRoutes
-  .get('/', (req, res) => res.status(200).send({ message: 'Hello from my awesome app !' }))
+  .get('/', (req, res) =>
+    res.status(200).send({ message: 'Hello from my awesome app !' })
+  )
   .use('/users', apiUsers)
   // api bellow this middelware require Authorization
   //  .use(isAuthenticated)

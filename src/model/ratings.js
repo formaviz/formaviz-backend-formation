@@ -6,26 +6,26 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         comment: 'Rating id',
-        primaryKey: true
+        primaryKey: true,
       },
       comment: {
         type: DataTypes.TEXT,
-        comment: 'User comment'
+        comment: 'User comment',
       },
       score: {
         type: DataTypes.INTEGER,
         comment: 'User rating',
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       paranoid: true,
-        indexes: [
-            {
-                unique: true,
-                fields: ['trainingId', 'userOfRating']
-            }
-        ]
+      indexes: [
+        {
+          unique: true,
+          fields: ['trainingId', 'userOfRating'],
+        },
+      ],
     }
   );
 

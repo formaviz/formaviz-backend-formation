@@ -3,7 +3,7 @@ const Ajv = require('ajv');
 const {
   UserSchema,
   UserLoginSchema,
-  UserUpdateSchema
+  UserUpdateSchema,
 } = require('../schema/user');
 
 const { TrainingSchema } = require('../schema/training');
@@ -26,7 +26,7 @@ ajv.addSchema(UserUpdateSchema, USER_UPDATE_SCHEMA);
 const validateSchema = (schemaName, body) => {
   const valid = ajv.validate(schemaName, body);
 
-  return {valid, erros: ajv.errorsText()};
+  return { valid, erros: ajv.errorsText() };
 };
 
 module.exports = {
@@ -35,5 +35,5 @@ module.exports = {
   USER_CREATION_SCHEMA,
   USER_LOGIN_SCHEMA,
   USER_UPDATE_SCHEMA,
-  validateSchema
+  validateSchema,
 };
