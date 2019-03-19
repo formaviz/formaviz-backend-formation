@@ -22,6 +22,13 @@ app.use(bodyParser.urlencoded());
 app.use(cors());
 app.use(expressPino);
 
+// upgrade to https if requested on http
+app.get('*', (req, res, next) => {
+  return !req.secure && process.env.NODE_ENV === 'production'
+    ? res.redirect(308, 'https://' + req.headers.host + req.originalUrl)
+    : next();
+});
+
 apiRoutes.use((req, res, next) => {
   req.log.info();
   next();
