@@ -173,10 +173,21 @@ const getTrainings = ({
     .then(trainings => trainings);
 };
 
+const getTrainingById = (idTraining) => {
+    logger.info(' [ Controller Training ]  getTrainingById %s', idTraining);
+    return Trainings.findOne({
+        where: { idTraining }
+    }).then(training => {
+        return training && !training.deletedAt
+            ? training : Promise.reject(new Error('Unknown or deleted training'))}
+    );
+};
+
 module.exports = {
   createTraining,
   getTrainings,
   checkLowestScore,
   checkHighestScore,
   updateAverageScore,
+  getTrainingById
 };

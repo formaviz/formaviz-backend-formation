@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
 const jwt = require('jwt-simple');
-const { createTraining, getTrainings } = require('../controller/trainings');
+const { createTraining, getTrainings, getTrainingById } = require('../controller/trainings');
 const { logger } = require('../logger');
 const {validateSchema, TRAINING_SCHEMA,} = require('../service/json-validator');
 
@@ -30,6 +30,7 @@ apiTrainings.post('/', (req, res) => {
     });
 });
 
+
 apiTrainings.get('/', (req, res) => {
   logger.info(' [ apiTrainings ] GET Training by query param ');
 
@@ -41,6 +42,25 @@ apiTrainings.get('/', (req, res) => {
       }))
     .catch(err => {
       logger.error(`💥 Failed to get trainings : ${err.stack}`);
+      return res.status(500).send({
+        success: false,
+        message: `${err.name} : ${err.message}`,
+      });
+    });
+});
+
+
+apiTrainings.get('/:idTraining', (req, res) => {
+  logger.info(' [ apiTrainings ] GET Training by id %s', req.params.idTraining);
+
+  getTrainingById(req.params.idTraining)
+    .then(training => res.status(201).send({
+        success: true,
+        training,
+        message: 'training retrieved',
+      }))
+    .catch(err => {
+      logger.error(`💥 Failed to get training : ${err.stack}`);
       return res.status(500).send({
         success: false,
         message: `${err.name} : ${err.message}`,
