@@ -2,10 +2,6 @@ const RateSchema = {
   title: 'Rate',
   type: 'object',
   properties: {
-    // 'userId':{
-    //   'type': 'string',
-    //   'format': 'uid'
-    // },
     comment: {
       type: 'string',
     },

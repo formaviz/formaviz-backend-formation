@@ -61,6 +61,10 @@ const TrainingSchema = {
           type: 'string',
           nullable: true,
         },
+        channelUri: {
+          type: 'string',
+          nullable: true,
+        },
       },
     },
   },

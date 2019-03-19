@@ -80,6 +80,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         comment: 'Slack channel created',
         defaultValue: false
+      },
+      channelUri: {
+        type: DataTypes.STRING,
+        comment: 'Uri of Slack channel',
       }
     },
     {
