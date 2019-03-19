@@ -35,6 +35,7 @@ const getUser = (req, res, next) => {
     )
   )
     .then(user => {
+      user.sub = user.sub.substring(6);
       req.user = user;
       next();
     })
