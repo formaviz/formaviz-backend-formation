@@ -2,6 +2,7 @@
 const express = require('express');
 
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const expressPino = require('../logger');
 
 const { checkJwt, getUser } = require('../controller/auth');
@@ -18,6 +19,7 @@ app.use(express.json({ limit: '1mb' }));
 const apiRoutes = express.Router();
 
 app.use(bodyParser.urlencoded());
+app.use(cors());
 app.use(expressPino);
 
 apiRoutes.use((req, res, next) => {
