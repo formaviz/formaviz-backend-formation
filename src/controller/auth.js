@@ -1,7 +1,6 @@
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 const request = require('request');
-const { Auth0Lock } = require('auth0-lock');
 
 const { logger } = require('../logger');
 
@@ -21,15 +20,25 @@ const checkJwt = jwt({
 });
 
 const getUser = (req, res, next) => {
-  logger.debug('Yup', req.user);
-  const lock = new Auth0Lock(
-    process.env.AUTH0_CLIENT_ID,
-    process.env.AUTH0_DOMAIN
-  );
-  lock.getUserInfo('454', (error, profile) => {
-    logger.debug('okdoki');
-  });
-  next();
+  const options = {
+    method: 'GET',
+    url: `https://${process.env.AUTH0_DOMAIN}/userinfo`,
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': `${req.get('Authorization')}`
+    },
+    json: true,
+  };
+  new Promise((resolve, reject) =>
+    request(options, (error, response, body) =>
+      error ? reject(new Error(error)) : resolve(body)
+    )
+  )
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => logger.error(err));
 };
 
 const login = (email, password) => {
@@ -42,7 +51,7 @@ const login = (email, password) => {
       username: email,
       password,
       audience: process.env.AUTH0_AUDIENCE,
-      scope: 'read:sample',
+      scope: 'read:sample openid',
       client_id: process.env.AUTH0_CLIENT_ID,
       client_secret: process.env.AUTH0_CLIENT_SECRET,
     },
