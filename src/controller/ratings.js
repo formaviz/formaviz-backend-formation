@@ -1,47 +1,41 @@
 /* eslint-disable linebreak-style */
 const { Ratings, Trainings } = require('../model');
-const {
-  checkLowestScore,
-  checkHighestScore,
-  updateAverageScore,
-} = require('./trainings');
+const { checkLowestScore, checkHighestScore, updateAverageScore } = require('./trainings');
 const { logger } = require('../logger');
 const db = require('../model/index');
 const sequelize = db.sequelize;
 
 // Story 2 : En tant que « évaluateur », je peux noter une formation, dans le but de partager mon avis
-// const createRating = ({ comment, score, idTraining}, idUser) => {
 const createRating = ({ comment, score, idTraining }, idUser) => {
-    logger.info(' [ Controller ] createRating for training %s', idTraining);
+    logger.info(' [ Controller Ratings ] createRating for training %s', idTraining);
     return Ratings.create ({
         userOfRating: idUser,
         trainingId: idTraining,
         comment,
         score
-    }).then (rating => {
-
-        Trainings.findOne({where :{ idTraining }}).then(training => {
-            logger.info(' [ Rating Api ] checkLowestScore to do on training %s', training.idTraining);
-            checkLowestScore(training, rating.score)
-            .then(() => {
-               logger.info(' [ Rating Api ] checkHighestScore to do on training %s', training.idTraining);
-               checkHighestScore(training, rating.score)
-               .then(() => {
-                  logger.info(' [ Rating Api ] updateAverageScore on training %s', training.idTraining);
-                  updateAverageScore(training, rating.score)
-                  })
-            });
-        });
-        return rating
     })
+        .then (rating => {
+            return Trainings.findOne({where :{ idTraining }})
+            .then(training => {
+                logger.info(' [ Controller Ratings ] checkLowestScore to do on training %s', training.idTraining);
+                return checkLowestScore(training, rating.score) })
+            .then(training => {
+                logger.info(' [ Controller Ratings ] checkHighestScore to do on training %s', training.idTraining);
+                return checkHighestScore(training, rating.score) })
+            .then(training => {
+                logger.info(' [  Controller Ratings ] updateAverageScore on training %s', training.idTraining);
+                return updateAverageScore(training, rating.score) })
+            })
+        .then(rating => {
+            return rating
+        })
 };
 
 
-// const updateRating = ({ idRating, comment, score })
 
 const getRatings = ({ idUser, idTraining }) => {
-    logger.info(' [ Controller ] getRatings ');
-    let query = 'SELECT "idRating", "comment", "score", "trainingId" as "idTraining" FROM "Ratings" WHERE ';
+    logger.info(' [ Controller Ratings ] getRatings ');
+    let query = 'SELECT "idRating" as "idRate", "comment", "score", "trainingId" as "idTraining" FROM "Ratings" WHERE ';
 
     if (idUser) query += '"userOfRating" =  \'' + idUser + '\' AND ';
     if (idTraining) query += '"trainingId" = \'' + idTraining + '\' AND ';
@@ -49,19 +43,47 @@ const getRatings = ({ idUser, idTraining }) => {
     if (query.substring(query.length -4) === 'AND ') query = query.substr(0, query.length - 4);
     if (query.substring(query.length -6) === 'WHERE ') query = query.substr(0, query.length - 6);
 
-    logger.info(' [ Controller ] getRatings Query %s ', query);
+    logger.info(' [ Controller Ratings ] getRatings Query %s ', query);
 
     return sequelize.query(query, {
         type: sequelize.QueryTypes.SELECT,
         raw: true
     })
-        .then(ratings => {
-            return ratings
+    .then(ratings => {
+        return ratings
+    })
+};
+
+
+const updateRating = ({ comment, score }, idRate ) => {
+    logger.info(' [ Controller Ratings ] updateRating  %s', idRate);
+    return Ratings.update({
+            comment : comment || '',
+            score: score || ''
+        },{
+            where: {idRating: idRate} ,
+            returning : true,
+            plain: true}
+    ).then (results => {
+        console.log(results);
+        const rating = results[1].dataValues;
+        return Trainings.findOne({where :{ idTraining: rating.trainingId }})
+            .then(training => {
+                logger.info(' [ Controller Ratings ] checkLowestScore to do on training %s', training.idTraining);
+                return checkLowestScore(training, rating.score) })
+            .then(training => {
+                logger.info(' [ Controller Ratings ] checkHighestScore to do on training %s', training.idTraining);
+                return checkHighestScore(training, rating.score) })
+            .then(training => {
+                logger.info(' [  Controller Ratings ] updateAverageScore on training %s', training.idTraining);
+                return updateAverageScore(training, rating.score) })
+            .then(() => { return rating })
         })
 };
 
+
 module.exports = {
     createRating,
-    // updateRating,
+    updateRating,
     getRatings
 };
