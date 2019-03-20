@@ -74,7 +74,7 @@ const getUser = ({ idUser }) =>
             plain: true,
           })
         )
-      : Promise.reject(new Error('UNKNOWN OR DELETED USER'))
+      : Promise.reject(new Error('Unknown or deleted user'))
   );
 
 module.exports = {

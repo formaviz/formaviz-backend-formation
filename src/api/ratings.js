@@ -1,6 +1,5 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
-const jwt = require('jwt-simple');
 const { checkJwt, getUser } = require('../controller/auth');
 const { createRating, getRatings, updateRating } = require('../controller/ratings');
 const { logger } = require('../logger');
@@ -19,7 +18,7 @@ apiRatings.post('/', [checkJwt, getUser], (req, res) => {
             logger.info(' api rating successfully created rate for training %s ', rating.idTraining);
             return res.status(201).send({
                 success: true,
-                profile: rating,
+                rating,
                 message: 'rating created'
             });
         })

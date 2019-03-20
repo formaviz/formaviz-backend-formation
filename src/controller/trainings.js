@@ -132,7 +132,7 @@ const getTrainings = ({
   city,
   region,
 }) => {
-  logger.info(' [ Controller ]  getTraining()');
+  logger.info(' [ Controller Trainings ]  getTraining()');
 
   let query =
     'SELECT to_json(sub) AS training FROM  (SELECT t.*, d."deptName", d."regionName", json_agg(l."grade") AS "admLevels", (SELECT l."grade" FROM "Levels" l WHERE l."idLevel" = t."diplomaLevel") as "diplomaName" FROM "Trainings" t LEFT JOIN "admLevels" a on t."idTraining" = a."idTraining" LEFT JOIN "Levels" l on a."idLevel" = l."idLevel" LEFT JOIN "Depts" d on t."deptId" = d."idDept" WHERE ';
@@ -183,11 +183,26 @@ const getTrainingById = (idTraining) => {
     );
 };
 
+const updateAllScores = (idTraining, score) =>  {
+    return Trainings.findOne({where :{ idTraining }})
+        .then(training => {
+            logger.info(' [ Controller Trainings ] checkLowestScore to do on training %s', training.idTraining);
+            return checkLowestScore(training, score) })
+        .then(training => {
+            logger.info(' [ Controller Trainings ] checkHighestScore to do on training %s', training.idTraining);
+            return checkHighestScore(training, score) })
+        .then(training => {
+            logger.info(' [  Controller Trainings ] updateAverageScore on training %s', training.idTraining);
+            return updateAverageScore(training, score) })
+        .then(training => training)
+};
+
 module.exports = {
   createTraining,
   getTrainings,
   checkLowestScore,
   checkHighestScore,
   updateAverageScore,
-  getTrainingById
+  getTrainingById,
+  updateAllScores
 };

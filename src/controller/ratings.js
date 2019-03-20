@@ -1,6 +1,7 @@
 /* eslint-disable linebreak-style */
-const { Ratings, Trainings } = require('../model');
-const { checkLowestScore, checkHighestScore, updateAverageScore } = require('./trainings');
+const { Ratings } = require('../model');
+const { updateAllScores } = require('./trainings');
+const { getUser } = require ('./users');
 const { logger } = require('../logger');
 const db = require('../model/index');
 const sequelize = db.sequelize;
@@ -15,18 +16,7 @@ const createRating = ({ comment, score, idTraining }, idUser) => {
         score
     })
         .then (rating => {
-            return Trainings.findOne({where :{ idTraining }})
-            .then(training => {
-                logger.info(' [ Controller Ratings ] checkLowestScore to do on training %s', training.idTraining);
-                return checkLowestScore(training, rating.score) })
-            .then(training => {
-                logger.info(' [ Controller Ratings ] checkHighestScore to do on training %s', training.idTraining);
-                return checkHighestScore(training, rating.score) })
-            .then(training => {
-                logger.info(' [  Controller Ratings ] updateAverageScore on training %s', training.idTraining);
-                return updateAverageScore(training, rating.score) })
-            })
-        .then(rating => {
+            updateAllScores(rating.trainingId, rating.score);
             return rating
         })
 };
@@ -71,17 +61,8 @@ const updateRating = ({ comment, score }, idRate, idUser ) => {
         ).then (results => {
             console.log(results);
             const rating = results[1].dataValues;
-            return Trainings.findOne({where :{ idTraining: rating.trainingId }})
-                .then(training => {
-                    logger.info(' [ Controller Ratings ] checkLowestScore to do on training %s', training.idTraining);
-                    return checkLowestScore(training, rating.score) })
-                .then(training => {
-                    logger.info(' [ Controller Ratings ] checkHighestScore to do on training %s', training.idTraining);
-                    return checkHighestScore(training, rating.score) })
-                .then(training => {
-                    logger.info(' [  Controller Ratings ] updateAverageScore on training %s', training.idTraining);
-                    return updateAverageScore(training, rating.score) })
-                .then(() =>  rating )
+            updateAllScores(rating.trainingId, rating.score);
+            return rating
         })
     })
 };
