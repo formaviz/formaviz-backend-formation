@@ -1,52 +1,14 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
-const jwt = require('jwt-simple');
-const { loginUser, updateUser, deleteUser } = require('../controller/users');
+const { updateUser, deleteUser } = require('../controller/users');
+const { checkJwt, getUser } = require('../controller/auth');
 const { logger } = require('../logger');
 
 const apiUsers = express.Router();
 
 
-/**
- * @api {post} /users/login User login
- * @apiVersion 1.0.0
- * @apiName loginUser
- * @apiGroup Users
- *
- * @apiParam {STRING} email Email of the User.
- *
- * @apiSuccess {BOOLEAN} success Success.
- * @apiSuccess {STRING} message Message.
- * @apiSuccess {STRING} token JWT token.
- * @apiSuccess {JSON} profile Profile informations about the User.
- */
-apiUsers.post('/login', (req, res) =>
-  !req.body.email
-    ? res.status(400).send({
-        success: false,
-        message: 'email is required',
-      })
-    : loginUser(req.body)
-        .then(user => {
-          const token = jwt.encode({ id: user.id }, process.env.JWT_SECRET);
-          return res.status(200).send({
-            success: true,
-            token: `JWT ${token}`,
-            profile: user,
-            message: 'user logged in',
-          });
-        })
-        .catch(err => {
-          logger.error(`💥 Failed to login user : ${err.stack}`);
-          return res.status(500).send({
-            success: false,
-            message: `${err.name} : ${err.message}`,
-          });
-        })
-);
-
 const apiUsersProtected = express.Router();
-apiUsersProtected.get('/', (req, res) =>
+apiUsersProtected.get('/', [checkJwt, getUser], (req, res) =>
   res.status(200).send({
     success: true,
     profile: req.user,
@@ -54,9 +16,11 @@ apiUsersProtected.get('/', (req, res) =>
   })
 );
 
-apiUsersProtected.put('/:idUser', (req, res) => {
-  req.body.idUser = req.params.idUser;
-  updateUser(req.body)
+apiUsersProtected.patch('/:idUser', [checkJwt, getUser], (req, res) => {
+    logger.info(' [ Api Users ] Updating user %s', req.body.firstName);
+    console.log('req.body ', req.body);
+    console.log('req.query ', req.params);
+  updateUser(req.body, req.params.idUser)
     .then(user => res.status(201).send({
         success: true,
         profile: user,

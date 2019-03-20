@@ -9,23 +9,19 @@ const createUser = (idUser, firstName, lastName, email, role) =>
     email,
     firstName: firstName || '',
     lastName: lastName || '',
-    role: role || 'EVAL',
+    role: role || 'PROSPECT',
   }).then(user => user);
 
-const updateUser = ({ idUser, firstName, lastName, email }) => {
-  logger.info(' controller idUser %s ', idUser);
 
-  return Users.findOne({
-    where: { idUser },
-  }).then(user => {
-    if (firstName != null) user.firstName = firstName;
-    if (lastName != null) user.lastName = lastName;
-    if (email != null) user.email = email;
+const updateUser = ({ firstName, lastName, email, role }, idUser) => {
+  logger.info(' [ Controller Users ] idUser %s ', idUser);
+
     return Users.update(
       {
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        email: email || '',
+        firstName: firstName || '',
+        lastName: lastName || '',
+        role: role || '',
       },
       {
         where: { idUser },
@@ -34,8 +30,7 @@ const updateUser = ({ idUser, firstName, lastName, email }) => {
       }
     ).then(user => user && !user.deletedAt
         ? omit(user, Users.all)
-        : Promise.reject(new Error('UNKNOWN OR DELETED USER')));
-  });
+        : Promise.reject(new Error('Unknown or deleted user')));
 };
 
 const deleteUser = ({ idUser }) => {
@@ -50,20 +45,7 @@ const deleteUser = ({ idUser }) => {
   });
 };
 
-const loginUser = ({ email }) =>
-  Users.findOne({
-    where: { email },
-  }).then(user =>
-    user && !user.deletedAt
-      ? Promise.all([
-          omit(
-            user.get({
-              plain: true,
-            })
-          ),
-        ])
-      : Promise.reject(new Error('UNKNOWN OR DELETED USER'))
-  );
+
 
 const getUser = ( idUser ) => {
     logger.info(' [ Controller Users ] getUser with id %s ', idUser);
@@ -83,7 +65,6 @@ const getUser = ( idUser ) => {
 module.exports = {
   createUser,
   getUser,
-  loginUser,
   updateUser,
   deleteUser,
 };

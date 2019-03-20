@@ -18,6 +18,9 @@ const UserSchema = {
       type: 'string',
       maxLength: 128,
     },
+    role: {
+      enum: [ 'EVAL', 'PROSPECT', 'STAFF', 'ADMIN' ],
+    },
   },
 };
 
@@ -45,6 +48,11 @@ const UserUpdateSchema = {
       maxLength: 128,
       nullable: true,
     },
+    role: {
+      type: 'string',
+      maxLength: 128,
+      enum: [ "EVAL", "PROSPECT", "STAFF", "ADMIN" ],
+   },
   },
 };
 
