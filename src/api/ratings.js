@@ -34,9 +34,9 @@ apiRatings.post('/', [checkJwt, getUser], (req, res) => {
 
 
 apiRatings.get('/', (req, res) => {
-    logger.info(' [ Api Ratings ] GET all ratings by idUser %s and idTraining %s', req.body.idUser, req.body.idTraining);
+    logger.info(' [ Api Ratings ] GET all ratings by query param idUser %s and idTraining %s', req.query.idUser, req.query.idTraining);
 
-    getRatings(req.body)
+    getRatings(req.query)
         .then(ratings => {
             return res.status(201).send({
                 success: true,
