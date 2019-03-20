@@ -35,7 +35,7 @@ apiRoutes.use((req, res, next) => {
 });
 
 apiRoutes.get('/', (req, res) => {
-  res.status(200).send({ message: 'Hello from formaviz api !' });
+  res.status(200).send({ message: 'Hello from formaviz api ! tesssssssst' });
 });
 
 /* Example of protected route, just use checkJwt middleware */
@@ -44,9 +44,6 @@ apiRoutes.get('/private', [checkJwt, getUser], (req, res) => {
 });
 
 apiRoutes
-  .get('/', (req, res) =>
-    res.status(200).send({ message: 'Hello from my awesome app !' })
-  )
   .use('/users', apiUsers)
   // api bellow this middelware require Authorization
   //  .use(isAuthenticated)
