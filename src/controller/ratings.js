@@ -68,9 +68,33 @@ const updateRating = ({ comment, score }, idRate, idUser ) => {
     })
 };
 
+const deleteRating = (idRate, user) => {
+    logger.info(' [ Controller Ratings ] deleteRating  %s of user %s', idRate, user.sub);
+    return getUser(user.sub)
+        .then(user => {
+            return Ratings.findOne({
+                where: { idRating:idRate }
+            }).then(rating => {
+                logger.info(' User ' + user.idUser + ' is admin ? ' + user.role === 'ADMIN');
+                logger.info(' User ' + user.idUser + ' is author of rating ? ' + user.idUser === rating.userOfRating);
+                logger.info(' Rating has been deleted ? ' + !rating.deletedAt);
+
+                if ((user.role === 'ADMIN') || (user.idUser === rating.userOfRating) && (!rating.deletedAt)){
+                     Ratings.destroy({ where: {idRating: rating.idRating}})
+                         .then (() => {
+                             return updateAllScores(rating.trainingId, rating.score);
+                         })
+                }
+                else {
+                    return Promise.reject(new Error('Rating ' + idRate + ' could not be deleted '));
+                }
+            })
+        })
+};
 
 module.exports = {
     createRating,
     updateRating,
-    getRatings
+    getRatings,
+    deleteRating
 };

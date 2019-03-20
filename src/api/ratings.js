@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
 const { checkJwt, getUser } = require('../controller/auth');
-const { createRating, getRatings, updateRating } = require('../controller/ratings');
+const { createRating, getRatings, updateRating, deleteRating } = require('../controller/ratings');
 const { logger } = require('../logger');
 const { validateSchema, RATE_SCHEMA } = require('../service/json-validator');
 
@@ -77,5 +77,24 @@ apiRatings.patch('/:idRate',  [checkJwt, getUser], (req, res) => {
 
 // Story 4 : En tant que « évaluateur », je peux supprimer une note que j’ai créé, dans le but de supprimer mon partage d’avis
 // Story 5 : En tant que « administrateur », je peux supprimer une note dans le but de modérer les abus ou faire respecter les critères de publication.
+apiRatings.delete('/:idRate',  [checkJwt, getUser], (req, res) => {
+    logger.info(' [ Api Ratings ] Delete rating %s of user %s for training %s', req.params.idRate, req.user.sub);
+    deleteRating(req.params.idRate, req.user)
+        .then(rating => {
+            return res.status(201).send({
+                success: true,
+                rating,
+                message: 'rating deleted'
+            });
+        })
+        .catch(err => {
+            logger.error(`💥 Failed to delete rating : ${err.stack}`);
+            return res.status(500).send({
+                success: false,
+                message: `${err.name} : ${err.message}`
+            });
+        });
+});
+
 
 module.exports = { apiRatings };

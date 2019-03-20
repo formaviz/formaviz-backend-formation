@@ -43,7 +43,7 @@ const createTraining = ({
 const checkLowestScore = (training) => {
   logger.info(' [ Controller ] check Lowest Score for training %s', training.idTraining);
 
-    const query = 'UPDATE "Trainings" t set "lowestScore"=(SELECT min("score") FROM "Ratings" r WHERE  r."trainingId" = ?) WHERE t."idTraining"= ? RETURNING *';
+    const query = 'UPDATE "Trainings" t set "lowestScore"=(SELECT min("score") FROM "Ratings" r WHERE  r."trainingId" = ? AND r."deletedAt" IS NULL) WHERE t."idTraining"= ? RETURNING *';
     return sequelize
         .query(query, {
             replacements: [training.idTraining, training.idTraining],
@@ -60,7 +60,7 @@ const checkLowestScore = (training) => {
 
 const checkHighestScore = (training) => {
   logger.info(' [ Controller ] check Highest Score for training %s', training.idTraining);
-    const query = 'UPDATE "Trainings" t set "highestScore"=(SELECT max("score") FROM "Ratings" r WHERE  r."trainingId" = ?) WHERE t."idTraining"= ? RETURNING *';
+    const query = 'UPDATE "Trainings" t set "highestScore"=(SELECT max("score") FROM "Ratings" r WHERE  r."trainingId" = ? AND r."deletedAt" IS NULL) WHERE t."idTraining"= ? RETURNING *';
     return sequelize
         .query(query, {
             replacements: [training.idTraining, training.idTraining],
@@ -77,7 +77,7 @@ const checkHighestScore = (training) => {
 const updateAverageScore = (training) => {
   logger.info(' [ Controller ] update average score for training %s', training.idTraining);
 
-    const query = 'SELECT AVG (score) FROM "Ratings" WHERE "trainingId" = ?';
+    const query = 'SELECT AVG (score) FROM "Ratings" WHERE "trainingId" = ? AND "deletedAt" IS NULL';
     return sequelize.query(query, {
         replacements: [training.idTraining],
         type: sequelize.QueryTypes.SELECT,

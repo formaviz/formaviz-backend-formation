@@ -64,18 +64,20 @@ const loginUser = ({ email }) =>
       : Promise.reject(new Error('UNKNOWN OR DELETED USER'))
   );
 
-const getUser = ({ idUser }) =>
-  Users.findOne({
-    where: { idUser },
-  }).then(user =>
-    user && !user.deletedAt
-      ? omit(
-          user.get({
-            plain: true,
-          })
-        )
-      : Promise.reject(new Error('Unknown or deleted user'))
-  );
+const getUser = ( idUser ) => {
+    logger.info(' [ Controller Users ] getUser with id %s ', idUser);
+    return Users.findOne({
+        where: {idUser},
+    }).then(user =>
+        user && !user.deletedAt
+            ? omit(
+            user.get({
+                plain: true,
+            })
+            )
+            : Promise.reject(new Error('Unknown or deleted user'))
+    );
+};
 
 module.exports = {
   createUser,

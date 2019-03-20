@@ -112,3 +112,4 @@ INSERT INTO "Users" VALUES('aa6dc629-9dfc-446c-a13f-823db998ea9b', 'Mitch', 'Dec
 INSERT INTO "Users" VALUES('d7777a91-5522-4865-aecd-64d575563a9e', 'DuCon', 'LaDouceur', 'ADMIN', 'ducon.ladouceur@test.com', LOCALTIMESTAMP, LOCALTIMESTAMP);
 
 INSERT INTO "Ratings" VALUES('8329cb0b-1183-4c3b-907e-5c96105d23e2', 'Note insérée falacieusement', 2, LOCALTIMESTAMP, LOCALTIMESTAMP, null, '637c7f88-581e-4cc6-8864-988213e10d5d', '01af8f6b-f360-42b2-bad2-aced2e0f6f7c');
+INSERT INTO "Ratings" VALUES('a63260d5-9c2a-410c-b0e0-d3240f08230f', '2eme Note insérée falacieusement', 1, LOCALTIMESTAMP, LOCALTIMESTAMP, null, '637c7f88-581e-4cc6-8864-988213e10d5d', 'd7777a91-5522-4865-aecd-64d575563a9e');
