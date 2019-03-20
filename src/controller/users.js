@@ -34,14 +34,14 @@ const updateUser = ({ firstName, lastName, email, role }, idUser) => {
 };
 
 const deleteUser = ({ idUser }) => {
-  logger.info(' controller deleting idUser %s ', idUser);
+  logger.info(' [ Controller Users ] deleting idUser %s ', idUser);
   return Users.destroy({
     where: { idUser },
   }).then(affectedRows => {
     logger.info(' %s rows deleted', affectedRows);
     return affectedRows === 1
       ? Promise.resolve(`The user id ${  idUser  } has been deleted`)
-      : Promise.reject(new Error('UNKNOWN OR DELETED USER'));
+      : Promise.reject(new Error('Unknown or deleted user '));
   });
 };
 

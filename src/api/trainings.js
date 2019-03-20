@@ -1,13 +1,13 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
-const jwt = require('jwt-simple');
 const { createTraining, getTrainings, getTrainingById } = require('../controller/trainings');
+const { checkJwt, getUser } = require('../controller/auth');
 const { logger } = require('../logger');
 const {validateSchema, TRAINING_SCHEMA,} = require('../service/json-validator');
 
 const apiTrainings = express.Router();
 
-apiTrainings.post('/', (req, res) => {
+apiTrainings.post('/', [checkJwt, getUser], (req, res) => {
   const valid = validateSchema(TRAINING_SCHEMA, req.body);
   if (!valid.valid) {
     return res.status(400).send(valid.erros);

@@ -1,0 +1,531 @@
+{
+	"info": {
+		"_postman_id": "1d1e1a00-6837-495a-acfe-df50a1691ade",
+		"name": "FORMAVIZ_CC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Signup User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"email\": \"turkish@test.com\",\n\"password\": \"@123Azertf\",\n\"firstName\": \"Turkish\",\n\"lastName\": \"TurkishName\",\n\"role\": \"PROSPECT\"\n}"
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/signup",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"email\": \"turkish@test.com\",\n\"password\": \"@123Azertf\"\n}"
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/login",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVVXlSa1JCUWpJMU5rTTJRVEZFTWpaQ05qSkNNa1k0UmpCRVFUVXlRVEUwUlVGRlJVRTFOZyJ9.eyJpc3MiOiJodHRwczovL2Zvcm1hdml6ei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8ZTQ4YTQ4NjMtZTA4ZC00ODZiLTkyYTctOWQ1YmNjNDNiMWFlIiwiYXVkIjpbImh0dHBzOi8vZm9ybWF2aXp6L2FwaS92MiIsImh0dHBzOi8vZm9ybWF2aXp6LmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTMxMDUzMTYsImV4cCI6MTU1MzE5MTcxNiwiYXpwIjoiNENoMXl3aUptWjQyc3lBSWR6ald5UHdSa3hobHFPczIiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUiLCJndHkiOiJwYXNzd29yZCIsInBlcm1pc3Npb25zIjpbXX0.ZZkII9CHyih06gzM4CvySpXbWPHdRRtdZI0lNSFUTFKVEgxcKMMHZv8hCaxoyGiypv2aYf9Z8QEE-HT-aB4WyGsKRUMaX3wVLOq-2qgs5HyXn1JdvUtmXW3CIo6h6pEw9Y-EpZhTcj2RoqWuMiX3xolayCBsVLGk1Wu3-Tetllj-vcaIbYCIV8Gjbdc_FzDhjsmObfvEtjSfX3pQ7ywLLXggUwjWMluJVf7CVH4BAj6VSrnQpZQPd51xIsIjCoAeD44KR8XgWLA7k6oLrQnYBjTfgadIBd-z5jDBNme98ivegnVWg-Bmouqs4JxZkUGrlzeG3R8jooRTzGhqpU8cCA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"email\": \"mickeyLeGitanDeLaCaravane@test.com\",\n\"firstName\": \"Mickey\",\n\"lastName\": \"LeGitan\",\n\"role\": \"ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/users/idUser",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"users",
+								"idUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get current user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVVXlSa1JCUWpJMU5rTTJRVEZFTWpaQ05qSkNNa1k0UmpCRVFUVXlRVEUwUlVGRlJVRTFOZyJ9.eyJpc3MiOiJodHRwczovL2Zvcm1hdml6ei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8ZTQ4YTQ4NjMtZTA4ZC00ODZiLTkyYTctOWQ1YmNjNDNiMWFlIiwiYXVkIjpbImh0dHBzOi8vZm9ybWF2aXp6L2FwaS92MiIsImh0dHBzOi8vZm9ybWF2aXp6LmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTMxMDUzMTYsImV4cCI6MTU1MzE5MTcxNiwiYXpwIjoiNENoMXl3aUptWjQyc3lBSWR6ald5UHdSa3hobHFPczIiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUiLCJndHkiOiJwYXNzd29yZCIsInBlcm1pc3Npb25zIjpbXX0.ZZkII9CHyih06gzM4CvySpXbWPHdRRtdZI0lNSFUTFKVEgxcKMMHZv8hCaxoyGiypv2aYf9Z8QEE-HT-aB4WyGsKRUMaX3wVLOq-2qgs5HyXn1JdvUtmXW3CIo6h6pEw9Y-EpZhTcj2RoqWuMiX3xolayCBsVLGk1Wu3-Tetllj-vcaIbYCIV8Gjbdc_FzDhjsmObfvEtjSfX3pQ7ywLLXggUwjWMluJVf7CVH4BAj6VSrnQpZQPd51xIsIjCoAeD44KR8XgWLA7k6oLrQnYBjTfgadIBd-z5jDBNme98ivegnVWg-Bmouqs4JxZkUGrlzeG3R8jooRTzGhqpU8cCA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/users/",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Levels",
+			"item": [
+				{
+					"name": "Get all levels",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/levels",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"levels"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Departments & Regions",
+			"item": [
+				{
+					"name": "Get all departments and regions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/depts",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"depts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Trainings",
+			"item": [
+				{
+					"name": "Create new Training",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVVXlSa1JCUWpJMU5rTTJRVEZFTWpaQ05qSkNNa1k0UmpCRVFUVXlRVEUwUlVGRlJVRTFOZyJ9.eyJpc3MiOiJodHRwczovL2Zvcm1hdml6ei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8ZTQ4YTQ4NjMtZTA4ZC00ODZiLTkyYTctOWQ1YmNjNDNiMWFlIiwiYXVkIjpbImh0dHBzOi8vZm9ybWF2aXp6L2FwaS92MiIsImh0dHBzOi8vZm9ybWF2aXp6LmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTMxMDUzMTYsImV4cCI6MTU1MzE5MTcxNiwiYXpwIjoiNENoMXl3aUptWjQyc3lBSWR6ald5UHdSa3hobHFPczIiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUiLCJndHkiOiJwYXNzd29yZCIsInBlcm1pc3Npb25zIjpbXX0.ZZkII9CHyih06gzM4CvySpXbWPHdRRtdZI0lNSFUTFKVEgxcKMMHZv8hCaxoyGiypv2aYf9Z8QEE-HT-aB4WyGsKRUMaX3wVLOq-2qgs5HyXn1JdvUtmXW3CIo6h6pEw9Y-EpZhTcj2RoqWuMiX3xolayCBsVLGk1Wu3-Tetllj-vcaIbYCIV8Gjbdc_FzDhjsmObfvEtjSfX3pQ7ywLLXggUwjWMluJVf7CVH4BAj6VSrnQpZQPd51xIsIjCoAeD44KR8XgWLA7k6oLrQnYBjTfgadIBd-z5jDBNme98ivegnVWg-Bmouqs4JxZkUGrlzeG3R8jooRTzGhqpU8cCA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"BTS SIO A\",\n\t\"description\": \"BTS Services informatiques aux organisations option A solutions d'infrastructure, systèmes et réseaux\",\n\t\"logoPath\": \"https://google.com/path_to_logo_BTS\",\n\t\"admLevel\": [9],\n\t\"expertise\": \"solutions d'infrastructure, systèmes et réseaux\",\n\t\"diplomaLevel\": 11,\n\t\"duration\": 2,\n\t\"partTime\": false,\n\t\"link\": \"https://google.com/link_to_miageM1\",\n\t\"school\": {\n\t\t\"name\": \"Lycée Gaston Berger\",\n\t\t\"street\": \" Avenue Gaston Berger\",\n\t\t\"cp\": \"59016\",\n\t\t\"city\": \"Lille\",\n\t\t\"description\": \"Lycée dans Lille\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/trainings",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"trainings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Trainings by query params",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/trainings?admLevel=9&diplomaLevel=11&partTime=false&expertise=réseaux&duration=2&region=hauts&dep=59&city=Lille",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"trainings"
+							],
+							"query": [
+								{
+									"key": "admLevel",
+									"value": "9"
+								},
+								{
+									"key": "diplomaLevel",
+									"value": "11"
+								},
+								{
+									"key": "partTime",
+									"value": "false"
+								},
+								{
+									"key": "expertise",
+									"value": "réseaux"
+								},
+								{
+									"key": "duration",
+									"value": "2"
+								},
+								{
+									"key": "region",
+									"value": "hauts"
+								},
+								{
+									"key": "dep",
+									"value": "59"
+								},
+								{
+									"key": "city",
+									"value": "Lille"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Training by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/trainings/idTraining",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"trainings",
+								"idTraining"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rates",
+			"item": [
+				{
+					"name": "Create rate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVVXlSa1JCUWpJMU5rTTJRVEZFTWpaQ05qSkNNa1k0UmpCRVFUVXlRVEUwUlVGRlJVRTFOZyJ9.eyJpc3MiOiJodHRwczovL2Zvcm1hdml6ei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8ZTQ4YTQ4NjMtZTA4ZC00ODZiLTkyYTctOWQ1YmNjNDNiMWFlIiwiYXVkIjpbImh0dHBzOi8vZm9ybWF2aXp6L2FwaS92MiIsImh0dHBzOi8vZm9ybWF2aXp6LmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTMxMDUzMTYsImV4cCI6MTU1MzE5MTcxNiwiYXpwIjoiNENoMXl3aUptWjQyc3lBSWR6ald5UHdSa3hobHFPczIiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUiLCJndHkiOiJwYXNzd29yZCIsInBlcm1pc3Npb25zIjpbXX0.ZZkII9CHyih06gzM4CvySpXbWPHdRRtdZI0lNSFUTFKVEgxcKMMHZv8hCaxoyGiypv2aYf9Z8QEE-HT-aB4WyGsKRUMaX3wVLOq-2qgs5HyXn1JdvUtmXW3CIo6h6pEw9Y-EpZhTcj2RoqWuMiX3xolayCBsVLGk1Wu3-Tetllj-vcaIbYCIV8Gjbdc_FzDhjsmObfvEtjSfX3pQ7ywLLXggUwjWMluJVf7CVH4BAj6VSrnQpZQPd51xIsIjCoAeD44KR8XgWLA7k6oLrQnYBjTfgadIBd-z5jDBNme98ivegnVWg-Bmouqs4JxZkUGrlzeG3R8jooRTzGhqpU8cCA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"comment\":\"Formation pendaison\",\n\t\"score\": 1,\n\t\"idTraining\": \"45dba242-ad64-4bc5-9b64-82bafd00d462\"\n}"
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/rates",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"rates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get rates by idTraining and/or idUser",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/rates?idTraining=4abf1091-b47f-46e6-9040-a75878de79aa&idUser=e48a4863-e08d-486b-92a7-9d5bcc43b1ae",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"rates"
+							],
+							"query": [
+								{
+									"key": "idTraining",
+									"value": "4abf1091-b47f-46e6-9040-a75878de79aa"
+								},
+								{
+									"key": "idUser",
+									"value": "e48a4863-e08d-486b-92a7-9d5bcc43b1ae"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update rate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVVXlSa1JCUWpJMU5rTTJRVEZFTWpaQ05qSkNNa1k0UmpCRVFUVXlRVEUwUlVGRlJVRTFOZyJ9.eyJpc3MiOiJodHRwczovL2Zvcm1hdml6ei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8ZTQ4YTQ4NjMtZTA4ZC00ODZiLTkyYTctOWQ1YmNjNDNiMWFlIiwiYXVkIjpbImh0dHBzOi8vZm9ybWF2aXp6L2FwaS92MiIsImh0dHBzOi8vZm9ybWF2aXp6LmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTMxMDUzMTYsImV4cCI6MTU1MzE5MTcxNiwiYXpwIjoiNENoMXl3aUptWjQyc3lBSWR6ald5UHdSa3hobHFPczIiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUiLCJndHkiOiJwYXNzd29yZCIsInBlcm1pc3Npb25zIjpbXX0.ZZkII9CHyih06gzM4CvySpXbWPHdRRtdZI0lNSFUTFKVEgxcKMMHZv8hCaxoyGiypv2aYf9Z8QEE-HT-aB4WyGsKRUMaX3wVLOq-2qgs5HyXn1JdvUtmXW3CIo6h6pEw9Y-EpZhTcj2RoqWuMiX3xolayCBsVLGk1Wu3-Tetllj-vcaIbYCIV8Gjbdc_FzDhjsmObfvEtjSfX3pQ7ywLLXggUwjWMluJVf7CVH4BAj6VSrnQpZQPd51xIsIjCoAeD44KR8XgWLA7k6oLrQnYBjTfgadIBd-z5jDBNme98ivegnVWg-Bmouqs4JxZkUGrlzeG3R8jooRTzGhqpU8cCA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"comment\":\"Formation pendaison\",\n\t\"score\": 2\n}"
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/rates/0ff2d415-987e-4e08-aa50-9f0f40f2a9b5",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"rates",
+								"0ff2d415-987e-4e08-aa50-9f0f40f2a9b5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete rate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVVXlSa1JCUWpJMU5rTTJRVEZFTWpaQ05qSkNNa1k0UmpCRVFUVXlRVEUwUlVGRlJVRTFOZyJ9.eyJpc3MiOiJodHRwczovL2Zvcm1hdml6ei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8ZTQ4YTQ4NjMtZTA4ZC00ODZiLTkyYTctOWQ1YmNjNDNiMWFlIiwiYXVkIjpbImh0dHBzOi8vZm9ybWF2aXp6L2FwaS92MiIsImh0dHBzOi8vZm9ybWF2aXp6LmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTMxMDUzMTYsImV4cCI6MTU1MzE5MTcxNiwiYXpwIjoiNENoMXl3aUptWjQyc3lBSWR6ald5UHdSa3hobHFPczIiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUiLCJndHkiOiJwYXNzd29yZCIsInBlcm1pc3Npb25zIjpbXX0.ZZkII9CHyih06gzM4CvySpXbWPHdRRtdZI0lNSFUTFKVEgxcKMMHZv8hCaxoyGiypv2aYf9Z8QEE-HT-aB4WyGsKRUMaX3wVLOq-2qgs5HyXn1JdvUtmXW3CIo6h6pEw9Y-EpZhTcj2RoqWuMiX3xolayCBsVLGk1Wu3-Tetllj-vcaIbYCIV8Gjbdc_FzDhjsmObfvEtjSfX3pQ7ywLLXggUwjWMluJVf7CVH4BAj6VSrnQpZQPd51xIsIjCoAeD44KR8XgWLA7k6oLrQnYBjTfgadIBd-z5jDBNme98ivegnVWg-Bmouqs4JxZkUGrlzeG3R8jooRTzGhqpU8cCA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{formaviz}}/rates/0ff2d415-987e-4e08-aa50-9f0f40f2a9b5",
+							"protocol": "http",
+							"host": [
+								"{{formaviz}}"
+							],
+							"path": [
+								"rates",
+								"0ff2d415-987e-4e08-aa50-9f0f40f2a9b5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "8c22c7d5-4bcd-48e9-b261-cd497231a2af",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "9d32311b-82f9-48a9-bec9-692a717dc350",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "e5e644f1-0d67-4404-9fc3-c1e0a1023d85",
+			"key": "formaviz",
+			"value": "formaviz-backend.cleverapps.io/api/v1",
+			"type": "string"
+		},
+		{
+			"id": "7f823179-ddf4-4288-b55e-dfce5a5f9b88",
+			"key": "local",
+			"value": "localhost:3002/api/v1",
+			"type": "string"
+		}
+	]
+}
