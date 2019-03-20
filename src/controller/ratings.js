@@ -6,6 +6,7 @@ const { logger } = require('../logger');
 const db = require('../model/index');
 const sequelize = db.sequelize;
 
+
 // Story 2 : En tant que « évaluateur », je peux noter une formation, dans le but de partager mon avis
 const createRating = ({ comment, score, idTraining }, idUser) => {
     logger.info(' [ Controller Ratings ] createRating for training %s', idTraining);
@@ -61,7 +62,7 @@ const updateRating = ({ comment, score }, idRate, idUser ) => {
         ).then (results => {
             console.log(results);
             const rating = results[1].dataValues;
-            updateAllScores(rating.trainingId, rating.score);
+            updateAllScores(rating.trainingId);
             return rating
         })
     })

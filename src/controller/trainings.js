@@ -40,66 +40,45 @@ const createTraining = ({
   });
 };
 
-const checkLowestScore = (training, newScore) => {
-  logger.info(
-    ' [ Controller ] check Lowest Score for training %s',
-    training.idTraining
-  );
-  if (!training.lowestScore || training.lowestScore > newScore) {
-    return Trainings.update(
-      {
-        lowestScore: newScore,
-      },
-      { where: { idTraining: training.idTraining } }
-    ).then(() =>
-      training && !training.deletedAt
-        ? Promise.resolve(training)
-        : Promise.reject(new Error('Unknown training'))
-    );
-  }
-  return Promise.resolve(training);
-};
+const checkLowestScore = (training) => {
+  logger.info(' [ Controller ] check Lowest Score for training %s', training.idTraining);
 
-const checkHighestScore = (training, newScore) => {
-  logger.info(
-    ' [ Controller ] check Highest Score for training %s',
-    training.idTraining
-  );
-  if (!training.highestScore || training.highestScore < newScore) {
-    return Trainings.update(
-      {
-        highestScore: newScore,
-      },
-      { where: { idTraining: training.idTraining } }
-    ).then(() =>
-      training && !training.deletedAt
-        ? Promise.resolve(training)
-        : Promise.reject(new Error('Unknown training'))
-    );
-  }
-  return Promise.resolve(training);
-};
-
-const updateAverageScore = (training, newScore) => {
-  logger.info(
-    ' [ Controller ] update average score for training %s',
-    training.idTraining
-  );
-  if (!training.averageScore) {
-    Trainings.update(
-      {
-        averageScore: newScore,
-      },
-      { where: { idTraining: training.idTraining } }
-    ).then(() =>
-      training && !training.deletedAt
-        ? Promise.resolve(training)
-        : Promise.reject(new Error('Unknown training'))
-    );
-  } else {
-    const query = 'SELECT AVG (score) FROM "Ratings" WHERE "trainingId" = ?';
+    const query = 'UPDATE "Trainings" t set "lowestScore"=(SELECT min("score") FROM "Ratings" r WHERE  r."trainingId" = ?) WHERE t."idTraining"= ? RETURNING *';
     return sequelize
-      .query(query, {
+        .query(query, {
+            replacements: [training.idTraining, training.idTraining],
+            type: sequelize.QueryTypes.UPDATE,
+            raw: true,
+        })
+        .then(result => {
+            logger.info(' [ Controller Trainings ] lowest score %s', result[0][0].lowestScore);
+            console.log('result ',result);
+            console.log('result[0][0] ', result[0][0]);
+            return result[0][0];
+        });
+};
+
+const checkHighestScore = (training) => {
+  logger.info(' [ Controller ] check Highest Score for training %s', training.idTraining);
+    const query = 'UPDATE "Trainings" t set "highestScore"=(SELECT max("score") FROM "Ratings" r WHERE  r."trainingId" = ?) WHERE t."idTraining"= ? RETURNING *';
+    return sequelize
+        .query(query, {
+            replacements: [training.idTraining, training.idTraining],
+            type: sequelize.QueryTypes.UPDATE,
+            raw: true,
+        })
+        .then(result => {
+            logger.info(' [ Controller Trainings ] highest score %s', result[0][0].lowestScore);
+            console.log('result ',result);
+            return result[0][0];
+        });
+};
+
+const updateAverageScore = (training) => {
+  logger.info(' [ Controller ] update average score for training %s', training.idTraining);
+
+    const query = 'SELECT AVG (score) FROM "Ratings" WHERE "trainingId" = ?';
+    return sequelize.query(query, {
         replacements: [training.idTraining],
         type: sequelize.QueryTypes.SELECT,
         raw: true,
@@ -115,11 +94,9 @@ const updateAverageScore = (training, newScore) => {
         ).then(() =>
           training && !training.deletedAt
             ? Promise.resolve(training)
-            : Promise.reject(new Error('Unknown training'))
+            : Promise.reject(new Error('Unknown or deleted training'))
         );
       });
-  }
-  return Promise.resolve(training);
 };
 
 const getTrainings = ({
@@ -183,17 +160,17 @@ const getTrainingById = (idTraining) => {
     );
 };
 
-const updateAllScores = (idTraining, score) =>  {
+const updateAllScores = (idTraining) =>  {
     return Trainings.findOne({where :{ idTraining }})
         .then(training => {
             logger.info(' [ Controller Trainings ] checkLowestScore to do on training %s', training.idTraining);
-            return checkLowestScore(training, score) })
+            return checkLowestScore(training) })
         .then(training => {
             logger.info(' [ Controller Trainings ] checkHighestScore to do on training %s', training.idTraining);
-            return checkHighestScore(training, score) })
+            return checkHighestScore(training) })
         .then(training => {
             logger.info(' [  Controller Trainings ] updateAverageScore on training %s', training.idTraining);
-            return updateAverageScore(training, score) })
+            return updateAverageScore(training) })
         .then(training => training)
 };
 
