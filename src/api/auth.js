@@ -19,7 +19,7 @@ apiAuth.post('/login', (req, res) => {
               })
             : res.status(401).send({
                 success: false,
-                message: 'Authentication failed: wrong credentials',
+                message: 'Authentication failed: wrong credentials: ' + access_token,
               }))
         .catch(err => {
           logger.error(`Unable to process authentication: ${err}`);
