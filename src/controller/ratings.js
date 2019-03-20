@@ -55,30 +55,35 @@ const getRatings = ({ idUser, idTraining }) => {
 };
 
 
-const updateRating = ({ comment, score }, idRate ) => {
+const updateRating = ({ comment, score }, idRate, idUser ) => {
     logger.info(' [ Controller Ratings ] updateRating  %s', idRate);
-    return Ratings.update({
-            comment : comment || '',
-            score: score || ''
-        },{
-            where: {idRating: idRate} ,
-            returning : true,
-            plain: true}
-    ).then (results => {
-        console.log(results);
-        const rating = results[1].dataValues;
-        return Trainings.findOne({where :{ idTraining: rating.trainingId }})
-            .then(training => {
-                logger.info(' [ Controller Ratings ] checkLowestScore to do on training %s', training.idTraining);
-                return checkLowestScore(training, rating.score) })
-            .then(training => {
-                logger.info(' [ Controller Ratings ] checkHighestScore to do on training %s', training.idTraining);
-                return checkHighestScore(training, rating.score) })
-            .then(training => {
-                logger.info(' [  Controller Ratings ] updateAverageScore on training %s', training.idTraining);
-                return updateAverageScore(training, rating.score) })
-            .then(() => { return rating })
+    return Ratings.findOne({ where: {idRating: idRate}})
+        .then(rating => {
+            return (rating.userOfRating !== idUser) ? Promise.reject(new Error('This rating has not been posted by user ' + idUser)) : rating
         })
+        .then(() => {return Ratings.update({
+                comment : comment || '',
+                score: score || ''
+            },{
+                where: {idRating: idRate} ,
+                returning : true,
+                plain: true}
+        ).then (results => {
+            console.log(results);
+            const rating = results[1].dataValues;
+            return Trainings.findOne({where :{ idTraining: rating.trainingId }})
+                .then(training => {
+                    logger.info(' [ Controller Ratings ] checkLowestScore to do on training %s', training.idTraining);
+                    return checkLowestScore(training, rating.score) })
+                .then(training => {
+                    logger.info(' [ Controller Ratings ] checkHighestScore to do on training %s', training.idTraining);
+                    return checkHighestScore(training, rating.score) })
+                .then(training => {
+                    logger.info(' [  Controller Ratings ] updateAverageScore on training %s', training.idTraining);
+                    return updateAverageScore(training, rating.score) })
+                .then(() =>  rating )
+        })
+    })
 };
 
 

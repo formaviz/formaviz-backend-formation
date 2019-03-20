@@ -58,7 +58,7 @@ apiRatings.get('/', (req, res) => {
 // Story 3 : En tant que « évaluateur », je peux modifier une note que j’ai créé, dans le but de corriger une erreur
 apiRatings.patch('/:idRate',  [checkJwt, getUser], (req, res) => {
     logger.info(' [ Api Ratings ] Update rating of user %s for training %s', req.user.sub, req.body.idTraining);
-    updateRating(req.body, req.params.idRate)
+    updateRating(req.body, req.params.idRate, req.user.sub)
             .then(rating => {
                 return res.status(201).send({
                     success: true,
