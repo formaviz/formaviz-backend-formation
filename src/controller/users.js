@@ -3,8 +3,9 @@ const omit = require('lodash.omit');
 const { Users } = require('../model');
 const { logger } = require('../logger');
 
-const createUser = ({ firstName, lastName, email, role }) =>
+const createUser = (idUser, firstName, lastName, email, role) =>
   Users.create({
+    idUser,
     email,
     firstName: firstName || '',
     lastName: lastName || '',
