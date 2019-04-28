@@ -26,7 +26,9 @@ const sendTrainingMessage = (message, idTraining, callback) =>
           channel,
           AMQP_TRAINING_QUEUE,
           message,
-          (msg) => callback(msg, idTraining));
+          (msg) => callback(msg, idTraining),
+          'amq.rabbitmq.reply-to'
+      );
       });
     });
 

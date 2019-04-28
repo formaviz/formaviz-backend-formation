@@ -53,7 +53,7 @@ const consume = (channel, queueName, successCallback, rpc, parameter, parameterC
 const sender = (channel, queueName, message, parameter) =>
   new Promise(() =>
     channel.checkQueue(queueName, (err, ok) =>
-        (err != null) ? Promise.reject(err) : Promise.resolve(true))
+      (err != null) ? Promise.reject(err) : Promise.resolve(true))
       .then(() => {
         logger.info('[SENDER] send message');
         logger.debug(queueName);
@@ -69,21 +69,22 @@ const sender = (channel, queueName, message, parameter) =>
  * @param {*} queueName
  * @param {*} message
  * @param {*} successCallback function to apply if the message has been treated and that the consumer has send a message return
+ * @param {*} replyToQueue
  */
-const rpcProducer = (conn, channel, queueName, message, successCallback) => {
-  channel.assertQueue('rpcQueue', {}).then(() => {
+const rpcProducer = (conn, channel, queueName, message, successCallback, replyToQueue = 'rcpQueue') => {
+  channel.assertQueue(replyToQueue, {}).then(() => {
     // generate an uuid to identify the request
     const corr = uuidv4();
-    consume(channel, 'rpcQueue', (msg) => {
+    consume(channel, replyToQueue, (msg) => {
       if (msg.properties != null && msg.properties.correlationId === corr) {
-        logger.info('[RPC-CONSUMMER] message return with uuid', corr);
+        logger.info('[RPC-CONSUMER] message return with uuid', corr);
         successCallback(msg);
-        setTimeout(() => {
-          conn.close();
-        }, 100);
       }
+      setTimeout(() => {
+        conn.close();
+      }, 5000);
     }, false, {noAck: true});
-    sender(channel, queueName, message, {correlationId: corr, replyTo: 'rpcQueue'});
+    sender(channel, queueName, message, {correlationId: corr, replyTo: replyToQueue});
   });
 };
 /**

@@ -10,18 +10,21 @@ const db = require('../model/index');
 const {sequelize} = db;
 
 const addChannelToTraining = (msg, idTraining) => {
+  logger.info('addChannelToTraining was called');
   const content = JSON.parse(msg.content.toString());
   const valid = validateSchema(RABBIT_TRAINING_SCHEMA, content);
 
   if (valid.valid) {
+    logger.info('Content was valid');
     Trainings.update({
-        chanCreated: true,
-        channelUri: content.message.url
-      }, {
-        where: {idTraining}
-      })
+      chanCreated: true,
+      channelUri: content.message.url
+    }, {
+      where: {idTraining}
+    })
       .then(() => Promise.resolve());
   }
+  logger.info(valid);
 };
 
 const createChannel = (name, city, idTraining, user) => {
@@ -107,10 +110,10 @@ const updateAverageScore = (training) => {
 
   const query = 'SELECT AVG (score) FROM "Ratings" WHERE "trainingId" = ? AND "deletedAt" IS NULL';
   return sequelize.query(query, {
-      replacements: [training.idTraining],
-      type: sequelize.QueryTypes.SELECT,
-      raw: true,
-    })
+    replacements: [training.idTraining],
+    type: sequelize.QueryTypes.SELECT,
+    raw: true,
+  })
     .then(result => {
       logger.info(' [ Controller ] computed average score %s', result[0].avg);
       logger.debug(result);
@@ -189,8 +192,8 @@ const getTrainingById = (idTraining) => {
   );
 };
 
-const updateAllScores = (idTraining) => {
-  return Trainings.findOne({where: {idTraining}})
+const updateAllScores = (idTraining) =>
+  Trainings.findOne({where: {idTraining}})
     .then(training => {
       logger.info(' [ Controller Trainings ] checkLowestScore to do on training %s', training.idTraining);
       return checkLowestScore(training);
@@ -204,6 +207,14 @@ const updateAllScores = (idTraining) => {
       return updateAverageScore(training);
     })
     .then(training => training);
+
+const getTrainingWithoutChannel = () => Trainings.findAll({where: {chanCreated: false}});
+
+const createMissingChannels = () => {
+  logger.info(' [  Controller Trainings ] creating missing channels')
+  getTrainingWithoutChannel().then(channels => {
+    channels.forEach(c => createChannel(c.name, c.schoolCity, c.idTraining, 'system'))
+  }).catch(error => logger.error(' [  Controller Trainings ] Error while creating missing channels', error));
 };
 
 module.exports = {
@@ -213,5 +224,6 @@ module.exports = {
   checkHighestScore,
   updateAverageScore,
   getTrainingById,
-  updateAllScores
+  updateAllScores,
+  createMissingChannels
 };
