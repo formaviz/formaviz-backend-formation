@@ -39,7 +39,10 @@ const getUser = (req, res, next) => {
       req.user = user;
       next();
     })
-    .catch(err => logger.error(err));
+    .catch(err => {
+      logger.error(err);
+      res.status(500).send(err);
+    });
 };
 
 const login = (email, password) => {
