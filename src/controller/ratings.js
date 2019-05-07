@@ -100,11 +100,12 @@ const getRatings = ({idUser, idTraining}) => {
 const updateRating = ({comment, score}, idRate, idUser) => {
   logger.info(' [ Controller Ratings ] updateRating  %s', idRate);
   return Ratings.findOne({where: {idRating: idRate}})
-    .then(rating =>
-      (rating.userOfRating !== idUser)
+    .then(rating => {
+      logger.debug(rating);
+      return (!rating || rating.userOfRating !== idUser)
         ? Promise.reject(new Error(`This rating has not been posted by user ${idUser}`))
-        : rating
-    )
+        : rating;
+    })
     .then(() =>
       Ratings.update({
           comment: comment || '',
