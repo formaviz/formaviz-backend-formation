@@ -34,8 +34,9 @@ const getUser = (req, res, next) => {
       error ? reject(new Error(error)) : resolve(body)
     )
   )
-    .then(user => {
-      user.sub = user.sub.substring(6);
+    .then(authResult => {
+      const user = authResult;
+      user.sub = authResult.sub.substring(6);
       req.user = user;
       next();
     })
