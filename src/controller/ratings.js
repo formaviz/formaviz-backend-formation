@@ -14,8 +14,6 @@ const getEmailsFromTraining = (idTraining, idUser) => {
   const query = `SELECT "Users".email as "email" from "Users" join "Ratings" R on "Users"."idUser" = R."userOfRating"
   WHERE  R."trainingId" = '${idTraining}' AND R."userOfRating" != '${idUser}';`;
 
-  logger.debug(query);
-
   return sequelize.query(query, {
     type: sequelize.QueryTypes.SELECT,
     raw: true
@@ -28,7 +26,6 @@ const sendMail = (trainingId, event, idUser) =>
       .then((emails) => {
 
         const mappedEmails = emails.map(email => email.email);
-        logger.debug(mappedEmails);
         if (training && emails) {
           return sendRatingMail(mappedEmails, event, training.name, training.schoolCity);
         }
@@ -91,17 +88,13 @@ const getRatings = ({idUser, idTraining}) => {
       type: sequelize.QueryTypes.SELECT,
       raw: true
     })
-    .then(ratings => {
-      logger.debug('hihi, c bon');
-      return ratings;
-    });
+    .then(ratings => ratings);
 };
 
 const updateRating = ({comment, score}, idRate, idUser) => {
   logger.info(' [ Controller Ratings ] updateRating  %s', idRate);
   return Ratings.findOne({where: {idRating: idRate}})
     .then(rating => {
-      logger.debug(rating);
       return (!rating || rating.userOfRating !== idUser)
         ? Promise.reject(new Error(`This rating has not been posted by user ${idUser}`))
         : rating;
@@ -116,7 +109,6 @@ const updateRating = ({comment, score}, idRate, idUser) => {
           plain: true
         }
       ).then(results => {
-        logger.debug(results);
         const rating = results[1].dataValues;
         sendMail(rating.trainingId, 'modifiée', idUser);
         updateAllScores(rating.trainingId);

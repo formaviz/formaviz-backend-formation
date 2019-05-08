@@ -15,7 +15,6 @@ const addChannelToTraining = (msg, idTraining) => {
   const valid = validateSchema(RABBIT_TRAINING_SCHEMA, content);
 
   if (valid.valid) {
-    logger.info('Content was valid');
     Trainings.update({
       chanCreated: true,
       channelUri: content.message.url
@@ -100,7 +99,6 @@ const checkHighestScore = (training) => {
     })
     .then(result => {
       logger.info(' [ Controller Trainings ] highest score %s', result[0][0].lowestScore);
-      logger.debug('result ', result);
       return result[0][0];
     });
 };
@@ -116,7 +114,6 @@ const updateAverageScore = (training) => {
   })
     .then(result => {
       logger.info(' [ Controller ] computed average score %s', result[0].avg);
-      logger.debug(result);
       Trainings.update(
         {
           averageScore: result[0].avg,

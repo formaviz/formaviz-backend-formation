@@ -56,8 +56,6 @@ const sender = (channel, queueName, message, parameter) =>
       (err != null) ? Promise.reject(err) : Promise.resolve(true))
       .then(() => {
         logger.info('[SENDER] send message');
-        logger.debug(queueName);
-        logger.debug(message);
         return channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)), parameter);
       }))
     .catch((err) => logger.error('don\'t sent :', err));

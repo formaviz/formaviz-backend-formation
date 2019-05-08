@@ -17,7 +17,6 @@ const sendEmail = (to, bcc, subject, text, html) => {
     text: `${text}`,
     html: `${html}`,
   };
-  logger.debug(msg);
   sgMail.send(msg);
 };
 
