@@ -1,3 +1,5 @@
+const RATE_SCHEMA = 'RateSchema';
+
 const RateSchema = {
   title: 'Rate',
   type: 'object',
@@ -19,4 +21,5 @@ const RateSchema = {
 
 module.exports = {
   RateSchema,
+  RATE_SCHEMA,
 };

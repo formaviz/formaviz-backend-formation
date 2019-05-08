@@ -12,9 +12,10 @@ const {
   TRAINING_SCHEMA,
   RABBIT_TRAINING_SCHEMA
 } = require('../schema/training');
-const {RateSchema} = require('../schema/rate');
-
-const RATE_SCHEMA = 'RateSchema';
+const {
+  RateSchema,
+  RATE_SCHEMA
+} = require('../schema/rate');
 
 const USER_CREATION_SCHEMA = 'UserCreationSchema';
 const USER_LOGIN_SCHEMA = 'UserLoginSchema';

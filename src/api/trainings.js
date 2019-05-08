@@ -1,7 +1,7 @@
 const express = require('express');
 
 /* eslint-disable linebreak-style */
-const {createTraining, getTrainings, getTrainingById, updateTrainingChannel} = require('../controller/trainings');
+const {createTraining, getTrainings, getTrainingById} = require('../controller/trainings');
 const {checkJwt, getUser} = require('../controller/auth');
 const {logger} = require('../logger');
 const {validateSchema} = require('../service/json-validator');
