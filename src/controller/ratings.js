@@ -48,6 +48,7 @@ const alertRabbit = (idTraining, idUser, rating) => {
           data: {
             name: `${training.name}_${training.schoolCity}`,
             email: user.email,
+            username: `${user.lastName}_${user.firstName}`,
             text: rating.comment
           }
         });
