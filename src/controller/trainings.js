@@ -66,7 +66,7 @@ const createTraining = ({
     schoolDescription: school.description || '',
   }).then(training => {
     logger.info(' Controller adding admLevel to new training');
-    createChannel(name, school.city, training.idTraining, user);
+    createChannel(training.name, training.schoolCity, training.idTraining, user);
     training.addAdmissionLevels(admLevel);
     return training;
   });

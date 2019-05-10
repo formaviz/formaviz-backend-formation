@@ -32,6 +32,9 @@ const sendMail = (trainingId, event, idUser) =>
         return null;
       }));
 
+
+const getChannelId = (channelUri) => channelUri.split('').reverse().slice(0,9).reverse().join('');
+
 const alertRabbit = (idTraining, idUser, rating) => {
   getUser(idUser).then((user) => {
     getTrainingById(idTraining)
@@ -40,6 +43,7 @@ const alertRabbit = (idTraining, idUser, rating) => {
           eventType: 'ADD_USER',
           data: {
             name: `${training.name}_${training.schoolCity}`,
+            idChannel: getChannelId(training.channelUri),
             email: user.email,
           }
         });
@@ -47,9 +51,10 @@ const alertRabbit = (idTraining, idUser, rating) => {
           eventType: 'EVAL_FORMATION',
           data: {
             name: `${training.name}_${training.schoolCity}`,
+            idChannel: getChannelId(training.channelUri),
             email: user.email,
             username: `${user.lastName}_${user.firstName}`,
-            text: rating.comment
+            textNote: rating.comment
           }
         });
       });
