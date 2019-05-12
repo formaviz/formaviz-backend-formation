@@ -3,7 +3,12 @@ const express = require('express');
 const {createUser} = require('../controller/users');
 const {validateSchema, USER_CREATION_SCHEMA} = require('../service/json-validator');
 const {login, signup} = require('../controller/auth');
+const {sendNewRaterMessage} = require('../service/rabbit-sender');
 const {logger} = require('../logger');
+
+
+const {SLACK_DEFAULT_CHANNEL} = process.env;
+
 
 const apiAuth = express.Router();
 
@@ -45,7 +50,16 @@ apiAuth.post('/signup', (req, res) => {
     .then(response => {
       logger.debug('response from Auth0 : ', response);
       logger.info(' [ Api Auth ] User successfully authenticated ', req.body.email);
-      return createUser(response.user_id, req.body.firstName, req.body.lastName, response.email, req.body.role);
+      const user = createUser(response.user_id, req.body.firstName, req.body.lastName, response.email, req.body.role);
+      sendNewRaterMessage({
+        eventType: 'ADD_USER',
+        data: {
+          name: 'tous',
+          idChannel: SLACK_DEFAULT_CHANNEL,
+          email: response.email,
+        }
+      });
+      return user;
     })
     .then(response => response.error || response.statusCode === 400
       ? res.status(400).send(response)

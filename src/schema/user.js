@@ -24,7 +24,7 @@ const UserSchema = {
       minLength: 6
     },
     role: {
-      enum: [ 'EVAL', 'PROSPECT', 'STAFF', 'ADMIN' ],
+      enum: ['EVAL', 'PROSPECT', 'STAFF', 'ADMIN'],
     },
   },
   required: ['email', 'firstName', 'lastName', 'password', 'role']
@@ -60,8 +60,8 @@ const UserUpdateSchema = {
     role: {
       type: 'string',
       maxLength: 128,
-      enum: [ "EVAL", "PROSPECT", "STAFF", "ADMIN" ],
-   },
+      enum: ['EVAL', 'PROSPECT', 'STAFF', 'ADMIN'],
+    },
   },
 };
 
