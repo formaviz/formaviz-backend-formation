@@ -1,7 +1,6 @@
 const UserSchema = {
   title: 'User',
   type: 'object',
-  required: ["email", "firstName", "lastName", "password", "role"],
   properties: {
     email: {
       type: 'string',
