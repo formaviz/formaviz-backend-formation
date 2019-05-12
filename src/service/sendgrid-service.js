@@ -20,16 +20,17 @@ const sendEmail = (to, bcc, subject, text, html) => {
   sgMail.send(msg);
 };
 
-const rateMail = (name, city, event) => `La formation ${name} ${city} vient d'être ${event}, venez vite découvrir sa note!`;
+const rateMail = (name, city, event, comment, score) =>
+  `La note de la formation ${name} ${city} vient d'être ${event}!\n"${comment}" -- ${score}/5`;
 
-const sendRatingMail = (bcc, event, name, city) => {
+const sendRatingMail = (bcc, event, name, city, comment, score) => {
   logger.info('SEND RATING MAIL');
   sendEmail(supportEmail,
     bcc,
     `${name} ${city} : note ${event}`,
     rateMail(name, city, event),
-    `<span>${rateMail(name, city, event)}</span>`,
-    )
+    `<span>${rateMail(name, city, event, comment, score)}</span>`,
+  );
 };
 
 const reportToSupport = involvedRoute => {

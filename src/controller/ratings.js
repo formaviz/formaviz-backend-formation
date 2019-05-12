@@ -20,20 +20,25 @@ const getEmailsFromTraining = (idTraining, idUser) => {
   });
 };
 
-const sendMail = (trainingId, event, idUser) =>
-  getTrainingById(trainingId).then(training =>
-    getEmailsFromTraining(trainingId, idUser)
+const sendMail = (rating, event, idUser) =>
+  getTrainingById(rating.trainingId).then(training =>
+    getEmailsFromTraining(rating.trainingId, idUser)
       .then((emails) => {
 
         const mappedEmails = emails.map(email => email.email);
         if (training && emails) {
-          return sendRatingMail(mappedEmails, event, training.name, training.schoolCity);
+          return sendRatingMail(mappedEmails,
+            event,
+            training.name,
+            training.schoolCity,
+            rating.comment,
+            rating.score);
         }
         return null;
       }));
 
 
-const getChannelId = (channelUri) => channelUri.split('').reverse().slice(0,9).reverse().join('');
+const getChannelId = (channelUri) => channelUri.split('').reverse().slice(0, 9).reverse().join('');
 
 const alertRabbit = (idTraining, idUser, rating) => {
   getUser(idUser).then((user) => {
@@ -54,7 +59,7 @@ const alertRabbit = (idTraining, idUser, rating) => {
             idChannel: getChannelId(training.channelUri),
             email: user.email,
             username: `${user.lastName}_${user.firstName}`,
-            textNote: rating.comment
+            textNote: `${rating.comment} -- ${rating.score}/5`
           }
         });
       });
@@ -71,8 +76,8 @@ const createRating = ({comment, score, idTraining}, idUser) => {
       score
     })
     .then(rating => {
-      alertRabbit(idTraining, idUser, rating)
-      sendMail(rating.trainingId, 'créée', idUser);
+      alertRabbit(idTraining, idUser, rating);
+      sendMail(rating, 'créée', idUser);
       updateAllScores(rating.trainingId, rating.score);
       return rating;
     });
@@ -82,8 +87,8 @@ const getRatings = ({idUser, idTraining}) => {
   logger.info(' [ Controller Ratings ] getRatings ');
   let query = 'SELECT "idRating" as "idRate", "comment", "score", "trainingId" as "idTraining" FROM "Ratings" WHERE ';
 
-  if (idUser) query += '"userOfRating" =  \'' + idUser + '\' AND ';
-  if (idTraining) query += '"trainingId" = \'' + idTraining + '\' AND ';
+  if (idUser) query += `"userOfRating" = '${idUser}' AND `;
+  if (idTraining) query += `"trainingId" = '${idTraining}' AND `;
 
   if (query.substring(query.length - 4) === 'AND ') query = query.substr(0, query.length - 4);
   if (query.substring(query.length - 6) === 'WHERE ') query = query.substr(0, query.length - 6);
@@ -100,11 +105,10 @@ const getRatings = ({idUser, idTraining}) => {
 const updateRating = ({comment, score}, idRate, idUser) => {
   logger.info(' [ Controller Ratings ] updateRating  %s', idRate);
   return Ratings.findOne({where: {idRating: idRate}})
-    .then(rating => {
-      return (!rating || rating.userOfRating !== idUser)
+    .then(rating =>
+      (!rating || rating.userOfRating !== idUser)
         ? Promise.reject(new Error(`This rating has not been posted by user ${idUser}`))
-        : rating;
-    })
+        : rating)
     .then(() =>
       Ratings.update({
           comment: comment || '',
@@ -116,34 +120,33 @@ const updateRating = ({comment, score}, idRate, idUser) => {
         }
       ).then(results => {
         const rating = results[1].dataValues;
-        sendMail(rating.trainingId, 'modifiée', idUser);
+        sendMail(rating, 'modifiée', idUser);
         updateAllScores(rating.trainingId);
         return rating;
       })
     );
 };
 
-const deleteRating = (idRate, user) => {
-  logger.info(' [ Controller Ratings ] deleteRating  %s of user %s', idRate, user.sub);
-  return getUser(user.sub)
-    .then(user => {
-      return Ratings.findOne({
+const deleteRating = (idRate, currentUser) => {
+  logger.info(' [ Controller Ratings ] deleteRating  %s of user %s', idRate, currentUser.sub);
+  return getUser(currentUser.sub)
+    .then(user =>
+      Ratings.findOne({
         where: {idRating: idRate}
       }).then(rating => {
-        logger.info(' User ' + user.idUser + ' is admin ? ' + user.role === 'ADMIN');
-        logger.info(' User ' + user.idUser + ' is author of rating ? ' + user.idUser === rating.userOfRating);
-        logger.info(' Rating has been deleted ? ' + !rating.deletedAt);
+        logger.info(` User ${user.idUser}  is admin ?  ${user.role === 'ADMIN'}`);
+        logger.info(` User ${user.idUser}  is author of rating ? ${user.idUser === rating.userOfRating}`);
+        logger.info(` Rating has been deleted ?  ${!rating.deletedAt}`);
 
         if ((user.role === 'ADMIN') || (user.idUser === rating.userOfRating) && (!rating.deletedAt)) {
-          Ratings.destroy({where: {idRating: rating.idRating}})
-            .then(() => {
-              return updateAllScores(rating.trainingId, rating.score);
-            });
-        } else {
-          return Promise.reject(new Error('Rating ' + idRate + ' could not be deleted '));
+          return Ratings.destroy({where: {idRating: rating.idRating}})
+            .then(() =>
+              updateAllScores(rating.trainingId, rating.score)
+            );
         }
-      });
-    });
+        return Promise.reject(new Error(`Rating ${idRate} could not be deleted `));
+      })
+    );
 };
 
 module.exports = {
