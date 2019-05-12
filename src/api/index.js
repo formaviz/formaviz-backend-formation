@@ -3,6 +3,8 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const helmet = require('helmet');
+const hpp = require('hpp');
 const expressPino = require('../logger');
 
 const { checkJwt, getUser } = require('../controller/auth');
@@ -18,8 +20,10 @@ const app = express();
 app.use(express.json({ limit: '1mb' }));
 const apiRoutes = express.Router();
 
-app.use(bodyParser.urlencoded());
+app.use(helmet());
 app.use(cors());
+app.use(bodyParser.urlencoded());
+app.use(hpp());
 app.use(expressPino);
 
 // upgrade to https if requested on http
