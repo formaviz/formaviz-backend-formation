@@ -13,11 +13,11 @@
 4. run ```npm install```
 5. run ```npm run build```
 6. run the script init.sql to initialize the database
-7. run ``npm run dev``` to launch the project. 
+7. run ```npm run dev``` to launch the project. 
 
 ## Database Schema
 
-![alt text](https://github.com/formaviz/formaviz-backend-formation/tree/develop/src/utils/MCD.png "Formaviz BackEnd DB Schema")
+![DB Schema](https://github.com/formaviz/formaviz-backend-formation/tree/develop/src/utils/MCD.png "Formaviz BackEnd DB Schema")
 
 
 ## Postman documentation
