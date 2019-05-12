@@ -9,14 +9,17 @@ const UserSchema = {
     firstName: {
       type: 'string',
       maxLength: 128,
+      minLength: 1,
     },
     lastName: {
       type: 'string',
       maxLength: 128,
+      minLength: 1,
     },
     password: {
       type: 'string',
       maxLength: 128,
+      minLength: 6
     },
     role: {
       enum: [ 'EVAL', 'PROSPECT', 'STAFF', 'ADMIN' ],
@@ -36,16 +39,19 @@ const UserUpdateSchema = {
     firstName: {
       type: 'string',
       maxLength: 128,
+      minLength: 1,
       nullable: true,
     },
     lastName: {
       type: 'string',
       maxLength: 128,
+      minLength: 1,
       nullable: true,
     },
     password: {
       type: 'string',
       maxLength: 128,
+      minLength: 6,
       nullable: true,
     },
     role: {
