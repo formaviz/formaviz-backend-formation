@@ -1,4 +1,4 @@
-#Formaviz BackEnd
+# Formaviz BackEnd
 
 ## 1.Requirements
 
@@ -17,7 +17,7 @@
 
 ## Database Schema
 
-![DB Schema](https://github.com/formaviz/formaviz-backend-formation/tree/develop/src/utils/MCD.png "Formaviz BackEnd DB Schema")
+![DB Schema](https://github.com/formaviz/formaviz-backend-formation/tree/develop/src/utils/MCD.png)
 
 
 ## Postman documentation
