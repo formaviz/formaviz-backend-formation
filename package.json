@@ -59,6 +59,7 @@
     "pg-hstore": "^2.3.2",
     "pino": "^5.10.7",
     "pino-pretty": "^2.5.0",
+    "request": "^2.88.0",
     "sequelize": "^4.42.0",
     "uppercamelcase": "^3.0.0",
     "uuid": "^3.3.2"

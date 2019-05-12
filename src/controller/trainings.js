@@ -16,11 +16,11 @@ const addChannelToTraining = (msg, idTraining) => {
 
   if (valid.valid) {
     Trainings.update({
-      chanCreated: true,
-      channelUri: content.message.url
-    }, {
-      where: {idTraining}
-    })
+        chanCreated: true,
+        channelUri: content.message.url
+      }, {
+        where: {idTraining}
+      })
       .then(() => Promise.resolve());
   }
   logger.info(valid);
@@ -108,10 +108,10 @@ const updateAverageScore = (training) => {
 
   const query = 'SELECT AVG (score) FROM "Ratings" WHERE "trainingId" = ? AND "deletedAt" IS NULL';
   return sequelize.query(query, {
-    replacements: [training.idTraining],
-    type: sequelize.QueryTypes.SELECT,
-    raw: true,
-  })
+      replacements: [training.idTraining],
+      type: sequelize.QueryTypes.SELECT,
+      raw: true,
+    })
     .then(result => {
       logger.info(' [ Controller ] computed average score %s', result[0].avg);
       Trainings.update(
@@ -182,10 +182,9 @@ const getTrainingById = (idTraining) => {
   logger.info(' [ Controller Training ]  getTrainingById %s', idTraining);
   return Trainings.findOne({
     where: {idTraining}
-  }).then(training => {
-      return training && !training.deletedAt
-        ? training : Promise.reject(new Error('Unknown or deleted training'));
-    }
+  }).then(training =>
+    training && !training.deletedAt
+      ? training : Promise.reject(new Error('Unknown or deleted training'))
   );
 };
 
@@ -208,9 +207,9 @@ const updateAllScores = (idTraining) =>
 const getTrainingWithoutChannel = () => Trainings.findAll({where: {chanCreated: false}});
 
 const createMissingChannels = () => {
-  logger.info(' [  Controller Trainings ] creating missing channels')
+  logger.info(' [  Controller Trainings ] creating missing channels');
   getTrainingWithoutChannel().then(channels => {
-    channels.forEach(c => createChannel(c.name, c.schoolCity, c.idTraining, 'system'))
+    channels.forEach(c => createChannel(c.name, c.schoolCity, c.idTraining, 'system'));
   }).catch(error => logger.error(' [  Controller Trainings ] Error while creating missing channels', error));
 };
 

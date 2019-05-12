@@ -24,7 +24,7 @@ apiUsersProtected.patch('/:idUser', [checkJwt, getUser], (req, res) => {
         logger.warn(' Request for update does not validate JSON schema');
         return res.status(400).send(valid.erros);
     }
-  updateUser(req.body, req.params.idUser)
+  return updateUser(req.body, req.params.idUser)
     .then(user => res.status(201).send({
         success: true,
         profile: user,

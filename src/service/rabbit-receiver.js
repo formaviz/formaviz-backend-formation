@@ -1,5 +1,6 @@
 const amqp = require('amqp');
-const RABBIT_MQ = process.env.RABBIT_MQ;
+
+const {RABBIT_MQ} = process.env;
 
 const {logger} = require('../logger');
 
