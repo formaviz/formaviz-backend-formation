@@ -12,11 +12,12 @@ const RateSchema = {
       minimum: 0,
       maximum: 5,
     },
-    trainingId: {
+    idTraining: {
       type: 'string',
       format: 'uuid',
     },
   },
+  required: ['comment', 'score', 'idTraining']
 };
 
 module.exports = {

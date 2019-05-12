@@ -45,7 +45,7 @@ const sendNewRaterMessage = (message) => {
   amqp.connect(RABBIT_MQ)
     .then((conn) => {
       conn.createChannel().then((channel) => {
-        rpcProducer(conn, channel, AMQP_USER_QUEUE, message, (msg) => logger.info(msg));
+        rpcProducer(conn, channel, AMQP_USER_QUEUE, message, (msg) => logger.info(JSON.parse(msg.content.toString())));
       });
     });
 };
