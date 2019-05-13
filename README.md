@@ -8,12 +8,19 @@
 ## 2.Set up
 
 1. Using Docker, create a Postgres container
-2. Update variables DATABASE_* in the .env file to connect to your container
-3. clone this repository ```git clone https://github.com/formaviz/formaviz-backend-formation.git```
-4. run ```npm install```
-5. run ```npm run build```
+2. Create a .env file at the root of the project (see example bellow) and set the following variables
+
+```
+
+```
+
+
+
+3. clone this repository `git clone https://github.com/formaviz/formaviz-backend-formation.git`
+4. run `npm install`
+5. run `npm run build`
 6. run the script init.sql to initialize the database
-7. run ```npm run dev``` to launch the project. 
+7. run `npm run dev` to launch the project. 
 
 ## Database Schema
 
