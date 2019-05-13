@@ -18,6 +18,12 @@ const UserSchema = {
       minLength: 1,
       nullable: false,
     },
+    name: {
+      type: 'string',
+      maxLength: 128,
+      minLength: 1,
+      nullable: false,
+    },
     password: {
       type: 'string',
       maxLength: 128,
@@ -27,7 +33,7 @@ const UserSchema = {
       enum: ['EVAL', 'PROSPECT', 'STAFF', 'ADMIN'],
     },
   },
-  required: ['email', 'firstName', 'lastName', 'password', 'role']
+  required: ['email', 'lastName', 'password', 'role']
 };
 
 const UserUpdateSchema = {
