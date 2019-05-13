@@ -36,7 +36,7 @@ const sendRatingMessage = (message) => {
   amqp.connect(RABBIT_MQ)
     .then((conn) => {
       conn.createChannel().then((channel) => {
-        rpcProducer(conn, channel, AMQP_RATING_QUEUE, message, (msg) => logger.info(JSON.parse(msg.content.toString)));
+        rpcProducer(conn, channel, AMQP_RATING_QUEUE, message, (msg) => logger.info(JSON.parse(msg.content.toString())));
       });
     });
 };
