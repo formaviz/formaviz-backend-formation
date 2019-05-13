@@ -6,9 +6,7 @@ const {login, signup} = require('../controller/auth');
 const {sendNewRaterMessage} = require('../service/rabbit-sender');
 const {logger} = require('../logger');
 
-
 const {SLACK_DEFAULT_CHANNEL} = process.env;
-
 
 const apiAuth = express.Router();
 
@@ -55,7 +53,7 @@ apiAuth.post('/signup', (req, res) => {
         eventType: 'ADD_USER',
         data: {
           name: 'tous',
-          idChannel: SLACK_DEFAULT_CHANNEL,
+          idChannel: `${SLACK_DEFAULT_CHANNEL}`,
           email: response.email,
         }
       });
